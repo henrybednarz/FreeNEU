@@ -1,0 +1,38 @@
+@import './variables.css';
+
+.notification-banner-wrapper {
+    position: fixed;
+    top: 5%;
+    left: 70%;
+    transform: translateX(-50%);
+    width: 50%;
+    z-index: 1000;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.notification-banner {
+    width: 100%;
+    padding: 10px 10px;
+    border-radius: 8px;
+    border: 2px var(--main-color) solid;
+    box-shadow: 2px 2px var(--main-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--font-color-light);
+    background-color: var(--bg-color);
+}
+
+.notification-banner.error {
+    background-color: var(--red-chip-color);
+}
+
+.notification-banner.success {
+    background-color: var(--green-chip-color);
+}
+
+.notification-message {
+    font-weight: 500;
+    flex-grow: 1;
+    margin-right: 10px;
+}

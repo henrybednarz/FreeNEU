@@ -1,0 +1,17 @@
+.event-add-button {
+    width: 5vh;
+    height: 5vh;
+    align-items: center;
+    justify-content: center;
+    color: var(--font-color-dark);
+    border: 2px var(--main-color) solid;
+    background-color: var(--bg-color);
+    box-shadow: 2px 2px var(--main-color);
+    border-radius: 3vh;
+    transition: transform 0.05s ease-out, box-shadow 0.05s ease-out;
+}
+
+.event-add-button:active {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+}

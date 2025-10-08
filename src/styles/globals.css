@@ -1,0 +1,78 @@
+@import './variables.css';
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.app-container {
+    position: relative;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+}
+
+.page-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.event-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+@media (max-width: 768px) {
+
+    .map-container {
+        height: 100%;
+        width: 100%;
+        z-index: 0;
+        overflow: hidden;
+    }
+
+    .radio-container {
+        position: absolute;
+        bottom: 5%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        z-index: 2000;
+    }
+
+    .button-container {
+        position: absolute;
+        bottom: 5%;
+        right: 5%;
+        z-index: 2000;
+    }
+
+    .location-marker {
+        width: 2vh;
+        height: 2vh;
+    }
+
+    .form-container {
+        justify-content: center;
+        width: 100%;
+        height: auto;
+        z-index: 2000;
+        display: flex;
+        position: absolute;
+        padding-top: 3vh;
+    }
+
+    .form-hidden {
+        opacity: 0;
+    }
+
+}

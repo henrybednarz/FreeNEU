@@ -1,0 +1,48 @@
+@import './variables.css';
+
+.switch-container {
+    height: 5vh;
+    width: 25vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px var(--main-color) solid;
+    background-color: var(--bg-color);
+    box-shadow: 2px 2px var(--main-color);
+    border-radius: 3vh;
+    position: relative;
+}
+
+.switch-button {
+    background: transparent;
+    border-radius: 3vh;
+    height: 100%;
+    width: 50%;
+    border: none;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.switch-button:focus-visible {
+    outline: 2px solid blue;
+    outline-offset: 2px;
+}
+
+.active-pill {
+    position: absolute;
+    inset: 3px 3px;
+    background-color: var(--main-color);
+    border-radius: 3vh;
+    z-index: -1;
+}
+
+.switch-text {
+    position: relative;
+    z-index: 2;
+}

@@ -1,0 +1,92 @@
+@import './variables.css';
+
+.event-card {
+    background-color: var(--bg-color);
+    border-radius: 16px;
+    border: 1px solid var(--main-color);
+    padding: 16px 16px 0 16px;
+    box-shadow: 1px 2px var(--card-shadow);
+    cursor: pointer;
+    width: 85%;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    margin-bottom: 16px;
+}
+
+.focused-card {
+    border: 2px solid var(--main-color);
+    box-shadow: 4px 4px var(--main-color);
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 4px 4px var(--font-color-dark);
+    border: 2px solid var(--main-color);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--font-color-dark);
+    margin: 0;
+}
+
+.card-description {
+    color: var(--font-color-dark);
+    line-height: 1.2;
+}
+
+.card-address,
+.card-timestamp {
+    font-size: 0.875rem;
+    color: var(--font-color-dark);
+}
+
+.card-address strong,
+.card-timestamp strong {
+    color: var(--font-color-dark);
+    font-weight: 500;
+}
+
+.card-type {
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.card-type-blue {
+    background-color: var(--blue-chip-light);
+    color: var(--blue-chip-color);
+}
+
+.card-type-red {
+    background-color: var(--red-chip-light);
+    color: var(--red-chip-color);
+}
+
+.card-type-orange {
+    background-color: var(--orange-chip-light);
+    color: var(--orange-chip-color);
+}
+
+.card-type-purple {
+    background-color: var(--purple-chip-light);
+    color: var(--purple-chip-color);
+}
+
+.card-type-green {
+    background-color: var(--green-chip-light);
+    color: var(--green-chip-color);
+}

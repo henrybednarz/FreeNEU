@@ -1,0 +1,268 @@
+@import './variables.css';
+
+.event-input-container {
+    background-color: var(--bg-color);
+    border-radius: 16px;
+    border: 2px solid var(--main-color);
+    padding: 24px;
+    box-shadow: 2px 2px var(--card-shadow);
+    width: 75%;
+    max-width: 600px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    margin-bottom: 16px;
+}
+
+.event-input-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-header {
+    margin-bottom: 8px;
+}
+
+.form-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--font-color-dark);
+    margin: 0;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--font-color-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-input {
+    padding: 12px;
+    border: 2px solid var(--main-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    background-color: var(--bg-color);
+    color: var(--font-color-dark);
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    outline: none;
+}
+
+.form-input:focus {
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.chip-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.type-chip {
+    padding: 8px 16px;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    border: 0 solid;
+    outline: none;
+}
+
+.type-chip:hover {
+    transform: translateY(-2px);
+}
+
+.type-chip:active {
+    transform: translateY(0);
+}
+
+.type-chip-orange {
+    background-color: var(--orange-chip-light);
+    color: var(--orange-chip-color);
+    border-color: var(--orange-chip-color);
+}
+
+.type-chip-orange.chip-selected {
+    background-color: var(--orange-chip-color);
+    color: #ffffff;
+    transform: scale(1.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.type-chip-blue {
+    background-color: var(--blue-chip-light);
+    color: var(--blue-chip-color);
+    border-color: var(--blue-chip-color);
+}
+
+.type-chip-blue.chip-selected {
+    background-color: var(--blue-chip-color);
+    color: #ffffff;
+    transform: scale(1.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Purple chip (Party) */
+.type-chip-purple {
+    background-color: var(--purple-chip-light);
+    color: var(--purple-chip-color);
+    border-color: var(--purple-chip-color);
+}
+
+.type-chip-purple.chip-selected {
+    background-color: var(--purple-chip-color);
+    color: #ffffff;
+    transform: scale(1.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.type-chip-red {
+    background-color: var(--red-chip-light);
+    color: var(--red-chip-color);
+    border-color: var(--red-chip-color);
+}
+
+.type-chip-red.chip-selected {
+    background-color: var(--red-chip-color);
+    color: #ffffff;
+    transform: scale(1.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Green chip (Other) */
+.type-chip-green {
+    background-color: #bbf7d0;
+    color: #16a34a;
+    border-color: #16a34a;
+}
+
+.type-chip-green.chip-selected {
+    background-color: #16a34a;
+    color: #ffffff;
+    transform: scale(1.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.form-textarea {
+    padding: 12px;
+    border: 2px solid var(--main-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    background-color: var(--bg-color);
+    color: var(--font-color-dark);
+    resize: vertical;
+    min-height: 80px;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    outline: none;
+}
+
+.form-textarea:focus {
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.address-container {
+    display: flex;
+    gap: 8px;
+}
+
+.address-input {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid var(--main-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    background-color: var(--bg-color);
+    color: var(--font-color-dark);
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    outline: none;
+}
+
+.address-input:focus {
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.map-button {
+    padding: 12px 20px;
+    background-color: var(--bg-color);
+    color: var(--font-color-dark);
+    border: 2px solid var(--main-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    box-shadow: 1px 1px var(--main-color);
+    white-space: nowrap;
+}
+
+.map-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 2px 2px var(--main-color);
+}
+
+.map-button:active {
+    transform: translateY(0);
+    box-shadow: 1px 1px var(--main-color);
+}
+
+.location-selected {
+    color: var(--font-color-light);
+    background-color: var(--main-color);
+}
+
+.button-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.submit-button {
+    flex: 1;
+    padding: 14px 24px;
+    background-color: var(--main-color);
+    color: var(--font-color-light);
+    border: 2px solid var(--main-color);
+    border-radius: 3vh;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    box-shadow: 2px 2px var(--main-color);
+}
+
+
+.submit-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 3px 3px var(--main-color);
+    background-color: var(--bg-color);
+    color: var(--font-color-dark);
+}
+
+.submit-button:active {
+    transform: translateY(0);
+    box-shadow: 1px 1px var(--main-color);
+}
+
+.input-error {
+    border: 2px solid var(--red-chip-color);
+    box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1);
+}
+
+.error-message {
+    font-size: 0.75rem;
+    color: var(--red-chip-color);
+    margin-top: -4px;
+    margin-bottom: 4px;
+}
