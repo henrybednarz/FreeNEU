@@ -1,5 +1,5 @@
 'use client';
-import { Marker } from 'react-leaflet';
+import { Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -57,7 +57,7 @@ const TYPE_FLAGS = {
  * @param {Array<object>} props.events - A list of event objects. Each event must have id, latitude, and longitude.
  * @param {Function} props.onPinClick - A callback function that is executed when a pin is clicked. It receives the event object.
  */
-export default function EventPins({ events, onPinClick }) {
+export default function EventPins({ events, onPinClick, focusedEvent }) {
     const handleClick = (eventData) => {
         if (typeof onPinClick === 'function') {
             onPinClick(eventData);
@@ -65,6 +65,7 @@ export default function EventPins({ events, onPinClick }) {
             console.warn("onPinClick prop is not a function!");
         }
     };
+    const isEventFocused = (event) => focusedEvent && focusedEvent.id === event.id;
 
     return (
         <>
@@ -74,9 +75,10 @@ export default function EventPins({ events, onPinClick }) {
                     position={[event.latitude, event.longitude]}
                     icon={TYPE_FLAGS[event.type] || eventIcon}
                     eventHandlers={{
-                        click: () => handleClick(event),
+                        click: () => onPinClick(event),
                     }}
-                />
+                >
+                </Marker>
             ))}
         </>
     );

@@ -90,3 +90,9 @@
     background-color: var(--green-chip-light);
     color: var(--green-chip-color);
 }
+
+.claimable {
+    background-color: var(--blue-chip-light);
+    border-color: var(--blue-chip-color);
+    box-shadow: 2px 2px 8px var(--blue-chip-color);
+}

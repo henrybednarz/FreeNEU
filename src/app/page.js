@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import '@/styles/globals.css';
 import SwitchSelector from "@/components/SwitchSelector";
 import EventList from '@/components/EventList';
-import { motion, AnimatePresence } from 'framer-motion'; // Ensure AnimatePresence is imported
+import { motion, AnimatePresence } from 'framer-motion';
 import EventAddButton from "@/components/EventAddButton";
 import EventAddForm from "@/components/EventAddForm";
 import NotificationBanner from "@/components/NotificationBanner";
@@ -57,6 +57,7 @@ export default function Home() {
     const [isSelectingLocation, setIsSelectingLocation] = useState(false);
     const [newEventData, setNewEventData] = useState(initialFormState);
     const [notification, setNotification] = useState(null);
+    const [userLocation, setUserLocation] = useState(null);
 
     useEffect(() => {
         async function fetchEvents() {
@@ -73,6 +74,22 @@ export default function Home() {
             }
         }
         fetchEvents();
+    }, []);
+
+    useEffect(() => {
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    setUserLocation([position.coords.latitude, position.coords.longitude]);
+                },
+                (error) => {
+                    console.error("Error getting user location:", error);
+                    setNotification({ message: 'Could not get your location. Map will be centered on a default location.', type: 'error' });
+                }
+            );
+        } else {
+            setNotification({ message: 'Geolocation is not supported by your browser.', type: 'error' });
+        }
     }, []);
 
     useEffect(() => {
@@ -186,12 +203,12 @@ export default function Home() {
             <AnimatePresence>
                 {notification && (
                     <motion.div
-                        key="notification-banner" // Important for AnimatePresence to track
+                        key="notification-banner"
                         initial={{ x: "100%", opacity: 0 }}
                         animate={{ x: "-50%", opacity: 1 }}
                         exit={{ x: "100%", opacity: 0 }}
                         transition={{ duration: 0.5, ease: "easeOut" }}
-                        className="notification-banner-wrapper" // Add a wrapper class for positioning
+                        className="notification-banner-wrapper"
                     >
                         <NotificationBanner
                             message={notification.message}
@@ -248,6 +265,7 @@ export default function Home() {
                         onPinClick={handlePinClick}
                         onMapClick={handleMapClick}
                         isAddingEvent={isSelectingLocation}
+                        userLocation={userLocation}
                     />
                 </div>
             </motion.div>
@@ -261,6 +279,7 @@ export default function Home() {
                     events={eventsData}
                     onCardClick={handleCardClick}
                     focusedEvent={focusedEvent}
+                    userLocation={userLocation}
                 />
             </motion.div>
         </div>
