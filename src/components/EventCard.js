@@ -4,8 +4,8 @@ import '@/styles/EventCard.css';
 const TYPE_COLORS = {
     "Food": "orange",
     "Drink": "blue",
-    "Party": "purple",
-    "Gift": "green",
+    "Item": "purple",
+    "Event": "green",
     "Other": "red"
 }
 
@@ -17,7 +17,7 @@ const EventCard = ({ event, onClick, isFocused, isClaimable }) => {
     return (
         <div
             className={`event-card ${isFocused ? 'focused-card' : ''} ${isClaimable ? 'claimable' : ''}`}
-            onClick={() => onClick(event)}
+            onClick={() => onClick(event, isClaimable)}
         >
             <div className="card-header">
                 <h3 className="card-title">{event.name}</h3>

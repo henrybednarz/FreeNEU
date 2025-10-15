@@ -16,6 +16,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    width: 100%;
 }
 
 .form-header {
@@ -112,7 +113,6 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Purple chip (Party) */
 .type-chip-purple {
     background-color: var(--purple-chip-light);
     color: var(--purple-chip-color);
@@ -222,14 +222,11 @@
     background-color: var(--main-color);
 }
 
-.button-group {
-    display: flex;
-    gap: 12px;
-    margin-top: 8px;
+.form-group.button {
+    width: 100%;
 }
 
 .submit-button {
-    flex: 1;
     padding: 14px 24px;
     background-color: var(--main-color);
     color: var(--font-color-light);
@@ -240,6 +237,7 @@
     cursor: pointer;
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     box-shadow: 2px 2px var(--main-color);
+    width: 100%;
 }
 
 

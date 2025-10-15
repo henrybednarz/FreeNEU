@@ -113,14 +113,13 @@ const EventInputForm = ({ formData, onFormDataChange, onSelectLocationFromMap, o
                             placeholder="Enter address or select from map"
                             readOnly
                         />
-                        <button onClick={handleMapSelect} className={`map-button ${formData.latitude && formData.longitude ? 'location-selected' : ''} ${validationErrors.location ? 'input-error' : ''}`}>
+                        <button onClick={handleMapSelect}
+                                className={`map-button ${formData.latitude && formData.longitude ? 'location-selected' : ''} ${validationErrors.location ? 'input-error' : ''}`}>
                             📍 Map
                         </button>
                     </div>
-
                 </div>
-
-                <div className="button-group">
+                <div className="form-group button">
                     <button onClick={handleSubmit} className="submit-button">
                         <div className="submit-button-pill">
                             Create Event

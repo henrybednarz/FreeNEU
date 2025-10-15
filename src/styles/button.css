@@ -11,6 +11,14 @@
     transition: transform 0.05s ease-out, box-shadow 0.05s ease-out;
 }
 
+.event-add-button.green {
+    background-color: var(--green-chip-color);
+}
+
+.event-add-button.red {
+    background-color: var(--red-chip-color);
+}
+
 .event-add-button:active {
     transform: translate(2px, 2px);
     box-shadow: none;

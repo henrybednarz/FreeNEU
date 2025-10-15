@@ -1,5 +1,6 @@
 'use server';
 import db from '../db.js'
+import { Resend } from 'resend';
 
 export default async function handler(req, res) {
     const authHeader = req.headers['authorization'];
@@ -38,5 +39,9 @@ async function removeExpiredEvents() {
 }
 
 async function sendEventNotifications() {
-    // Placeholder for email notification logic
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    const now = new Date();
+
+    
+
 }

@@ -1,15 +1,9 @@
 import React from 'react';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import '@/styles/EventAddButton.css';
+import '@/styles/button.css';
 
-const EventAddButton = ({ onClick, isOpen, setIsOpen }) => {
-    const handleClick = () => {
-        setIsOpen(!isOpen);
-        if (onClick) {
-            onClick();
-        }
-    }
+const PlusButton = ({ onClick, isOpen }) => {
 
     const verticalLineVariants = {
         open: {
@@ -26,7 +20,7 @@ const EventAddButton = ({ onClick, isOpen, setIsOpen }) => {
     };
 
     return (
-        <div className="event-add-button" onClick={handleClick}>
+        <div className="event-add-button" onClick={onClick}>
             <motion.svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                 <motion.line
                     x1="50"
@@ -51,4 +45,4 @@ const EventAddButton = ({ onClick, isOpen, setIsOpen }) => {
     );
 }
 
-export default EventAddButton;
+export default PlusButton;

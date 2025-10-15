@@ -2,8 +2,6 @@ import React from 'react';
 import EventCard from './EventCard';
 import '@/styles/EventList.css';
 
-// This function determines if an event is claimable based on proximity.
-// No changes are needed here.
 function isClaimable(event, userLocation) {
     if (!userLocation) return false;
     const userLat = userLocation[0];

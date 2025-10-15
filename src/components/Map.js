@@ -63,8 +63,8 @@ export default function Map({ events, onPinClick, focusedEvent, onMapClick, user
             zoomControl={false}
         >
             <TileLayer
-                url={openMapUrl}
-                attribution={openMapAttribution}
+                url={stadiaTonerLiteUrl}
+                attribution={stadiaTonerLiteUrl}
             />
 
             {onMapClick && <MapClickHandler onMapClick={onMapClick} />}
