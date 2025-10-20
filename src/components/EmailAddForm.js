@@ -14,7 +14,6 @@ const EmailInputForm = ({ formData, onFormDataChange, onSubmit }) => {
     };
 
     const validateEmail = (email) => {
-        // Simple regex for email validation
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(String(email).toLowerCase());
     };
@@ -39,11 +38,12 @@ const EmailInputForm = ({ formData, onFormDataChange, onSubmit }) => {
         <div className="event-input-container">
             <div className="event-input-form">
                 <div className="form-header">
-                    <h3 className="form-title">Enter Your Information</h3>
+                    <h3 className="form-title">Get Notified</h3>
+                    <div className="form-subtext">Sign up for email notifications of the latest events.</div>
                 </div>
 
                 <div className="form-group">
-                    <label className="form-label">Full Name</label>
+                    <label className="form-label">Name</label>
                     <input
                         type="text"
                         name="name"

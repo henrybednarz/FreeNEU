@@ -1,6 +1,5 @@
 import React from 'react';
-import CheckButton from './CheckButton';
-import XButton from './XButton';
+import IconButton from './IconButton';
 import '@/styles/EventStatus.css';
 
 const EventStatus = ({ onCheck, onX, setShowEventStatus, event }) => {
@@ -21,8 +20,8 @@ const EventStatus = ({ onCheck, onX, setShowEventStatus, event }) => {
         <div className="event-status-container">
             <div className="header-card">Is {event ? event.name : 'null'} still happening?</div>
             <div className="button-group">
-                <CheckButton onClick={handleCheck} />
-                <XButton onClick={handleX} />
+                <IconButton type="check" onClick={handleCheck} />
+                <IconButton type="x" onClick={handleX} />
             </div>
         </div>
     );

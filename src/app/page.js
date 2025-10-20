@@ -1,16 +1,15 @@
 'use client';
-import { useMemo } from 'react';
+import {useEffect, useMemo} from 'react';
 import dynamic from 'next/dynamic';
 import '@/styles/globals.css';
 import SwitchSelector from "@/components/SwitchSelector";
 import EventList from '@/components/EventList';
 import { motion, AnimatePresence } from 'framer-motion';
-import PlusButton from "@/components/PlusButton";
 import EventAddForm from "@/components/EventAddForm";
 import NotificationBanner from "@/components/NotificationBanner";
 import EventStatus from "@/components/EventStatus";
-import MailButton from "@/components/MailButton";
 import EmailAddForm from "@/components/EmailAddForm";
+import IconButton from "@/components/IconButton";
 
 import { useEvents } from '@/hooks/useEvents';
 import { useGeolocation } from '@/hooks/useGeolocation';
@@ -56,7 +55,6 @@ const Map = dynamic(
 );
 
 export default function Home() {
-    // Custom hooks for state management
     const { eventsData, createEvent, updateEvent, deleteEvent } = useEvents();
     const { userLocation, error: geoError } = useGeolocation();
     const { notification, showNotification, clearNotification } = useNotification();
@@ -100,8 +98,7 @@ export default function Home() {
         closeEventStatus
     } = useEventStatus();
 
-    // Show geolocation error as notification
-    useMemo(() => {
+    useEffect(() => {
         if (geoError) {
             showNotification(geoError, 'error');
         }
@@ -124,14 +121,12 @@ export default function Home() {
         toggleForm();
     };
 
-    // Handle select location button click
     const handleSelectLocation = () => {
         closeEventStatus();
         startLocationSelection();
         switchView(MAP_VIEW);
     };
 
-    // Handle map click when selecting location
     const handleMapClick = async ({ lat, lng }) => {
         if (!isSelectingLocation) return;
         await handleLocationSelected(lat, lng);
@@ -195,7 +190,6 @@ export default function Home() {
         }
     };
 
-    // Handle view switch
     const handleViewSwitch = (view) => {
         switchView(view);
         clearFocus();
@@ -296,14 +290,16 @@ export default function Home() {
             </div>
 
             <div className="plus-button-container">
-                <PlusButton
+                <IconButton
+                    type="plus"
                     isOpen={showEventForm}
                     onClick={handleToggleForm}
                 />
             </div>
 
             <div className="mail-button-container">
-                <MailButton
+                <IconButton
+                    type="mail"
                     onClick={handleToggleEmailForm}
                 />
             </div>
@@ -325,7 +321,6 @@ export default function Home() {
                 </div>
             </motion.div>
 
-            {/* Event List View */}
             <motion.div
                 className="event-container"
                 variants={viewVariants}

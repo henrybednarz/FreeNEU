@@ -19,8 +19,10 @@
     width: 100%;
 }
 
-.form-header {
-    margin-bottom: 8px;
+.form-subtext {
+    font-size: 1rem;
+    color: var(--font-color-secondary);
+    margin-top: 2px;
 }
 
 .form-title {

@@ -13,9 +13,6 @@ export default async function handler(req, res) {
     // 1. Delete expired events
     await removeExpiredEvents();
 
-    // 2. Send out Email notifications for active/upcoming events
-    await sendEventNotifications();
-
     res.status(200).end('Cron tasks completed successfully');
 }
 
@@ -36,12 +33,4 @@ async function removeExpiredEvents() {
         console.error('Database error:', err);
         return { success: false, message: 'Database error occurred.' };
     }
-}
-
-async function sendEventNotifications() {
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    const now = new Date();
-
-    
-
 }

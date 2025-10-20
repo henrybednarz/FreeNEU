@@ -24,7 +24,6 @@ const EventList = ({ events, focusedEvent, onCardClick, userLocation }) => {
 
     return (
         <div className="event-list-wrapper">
-            <div className="event-list-header">Events</div>
             <div className="event-list-items">
                 {sortedEvents.length > 0 ? (
                     sortedEvents.map((event) => (

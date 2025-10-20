@@ -54,7 +54,7 @@ export const useEmailForm = () => {
             return { success: true, message: 'Email submitted successfully.' };
         } catch (error) {
             console.error('Error submitting email:', error);
-            return { success: false, message: error.message };
+            return { success: false, message: error };
         } finally {
             setIsSubmittingEmail(false);
         }
