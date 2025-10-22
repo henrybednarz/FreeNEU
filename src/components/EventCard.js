@@ -9,6 +9,7 @@ const TYPE_COLORS = {
     "Other": "red"
 }
 
+
 const EventCard = ({ event, onClick, isFocused, isClaimable }) => {
     const formatTimestamp = (timestamp) => {
         return new Date(timestamp).toLocaleString();
@@ -19,7 +20,7 @@ const EventCard = ({ event, onClick, isFocused, isClaimable }) => {
             className={`event-card ${isFocused ? 'focused-card' : ''} ${isClaimable ? 'claimable' : ''}`}
             onClick={() => onClick(event, isClaimable)}
         >
-            <div className="card-header">
+            <div className="card-header" >
                 <h3 className="card-title">{event.name}</h3>
                 <span className={`card-type card-type-${TYPE_COLORS[event.type] || "blue"}`}>{event.type}</span>
             </div>

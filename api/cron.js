@@ -1,17 +1,15 @@
 'use server';
 import db from '../db.js'
-import { Resend } from 'resend';
+import { sendEventNotifications } from '../notifications.js'
 
 export default async function handler(req, res) {
-    const authHeader = req.headers['authorization'];
-    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-        return res.status(401).end('Unauthorized');
-    }
+    // const authHeader = req.headers['authorization'];
+    // if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    //     return res.status(401).end('Unauthorized');
+    // }
 
-    // Cron Tasks here:
-
-    // 1. Delete expired events
     await removeExpiredEvents();
+    await sendEventNotifications(process.env.RESEND_KEY);
 
     res.status(200).end('Cron tasks completed successfully');
 }
