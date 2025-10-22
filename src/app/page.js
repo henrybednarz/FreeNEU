@@ -2,22 +2,22 @@
 import {useEffect, useMemo} from 'react';
 import dynamic from 'next/dynamic';
 import '@/styles/globals.css';
-import SwitchSelector from "@/components/SwitchSelector";
-import EventList from '@/components/EventList';
+import SwitchSelector from "@/components/SwitchSelector.js";
+import EventList from '@/components/EventList.js';
 import { motion, AnimatePresence } from 'framer-motion';
-import EventAddForm from "@/components/EventAddForm";
-import NotificationBanner from "@/components/NotificationBanner";
-import EventStatus from "@/components/EventStatus";
-import EmailAddForm from "@/components/EmailAddForm";
-import IconButton from "@/components/IconButton";
+import EventAddForm from "@/components/EventAddForm.js";
+import NotificationBanner from "@/components/NotificationBanner.js";
+import EventStatus from "@/components/EventStatus.js";
+import EmailAddForm from "@/components/EmailAddForm.js";
+import IconButton from "@/components/IconButton.js";
 
-import { useEvents } from '@/hooks/useEvents';
-import { useGeolocation } from '@/hooks/useGeolocation';
-import { useNotification } from '@/hooks/useNotification';
-import { useEmailForm } from '@/hooks/useEmailForm';
-import { useEventForm } from '@/hooks/useEventForm';
-import { useViewManager } from '@/hooks/useViewManager';
-import { useEventStatus } from '@/hooks/useEventStatus';
+import { useEvents } from '@/hooks/useEvents.js';
+import { useGeolocation } from '@/hooks/useGeolocation.js';
+import { useNotification } from '@/hooks/useNotification.js';
+import { useEmailForm } from '@/hooks/useEmailForm.js';
+import { useEventForm } from '@/hooks/useEventForm.js';
+import { useViewManager } from '@/hooks/useViewManager.js';
+import { useEventStatus } from '@/hooks/useEventStatus.js';
 
 const MAP_VIEW = 'Map';
 const EVENT_VIEW = 'Events';
