@@ -13,10 +13,9 @@ const openMapAttribution = '&copy; <a href="https://www.openstreetmap.org/copyri
 
 
 const userIcon = new L.Icon({
-    iconUrl: './assets/orange-flag.png',
-    iconSize: [38, 38],
-    iconAnchor: [19, 38],
-    popupAnchor: [0, -38],
+    iconUrl: './assets/person-icon.png',
+    iconSize: [50, 50],
+    iconAnchor: [25, 25],
 });
 
 const ChangeView = ({ center, zoom }) => {

@@ -5,8 +5,8 @@ const TYPE_COLORS = {
     "Food": "orange",
     "Drink": "blue",
     "Item": "purple",
-    "Event": "green",
-    "Other": "red"
+    "Event": "red",
+    "Other": "green"
 }
 
 

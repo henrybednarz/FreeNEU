@@ -143,13 +143,13 @@
 
 /* Green chip (Other) */
 .type-chip-green {
-    background-color: #bbf7d0;
-    color: #16a34a;
-    border-color: #16a34a;
+    background-color: var(--green-chip-light);
+    color: var(--green-chip-color);
+    border-color: var(--green-chip-color);
 }
 
 .type-chip-green.chip-selected {
-    background-color: #16a34a;
+    background-color: var(--green-chip-color);
     color: #ffffff;
     transform: scale(1.05);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);

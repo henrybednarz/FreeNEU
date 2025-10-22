@@ -10,34 +10,34 @@ L.Icon.Default.mergeOptions({
     shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
 
-const ICON_SIZE = [50, 50]
-const ICON_ANCHOR = [25, 50]
+const ICON_SIZE = [75, 75]
+const ICON_ANCHOR = [38, 75]
 const eventIcon = new L.Icon({
-    iconUrl: '/assets/map-pin.svg',
+    iconUrl: '/assets/green_icon.png',
     iconSize: ICON_SIZE,
     iconAnchor: ICON_ANCHOR,
 });
 
 const foodIcon = new L.Icon({
-    iconUrl: '/assets/orange-flag.png',
+    iconUrl: '/assets/orange_icon.png',
     iconSize: ICON_SIZE,
     iconAnchor: ICON_ANCHOR,
 });
 
 const drinkIcon = new L.Icon({
-    iconUrl: '/assets/blue-flag.png',
-    iconSize: [50, 50],
+    iconUrl: '/assets/blue_icon.png',
+    iconSize: ICON_SIZE,
     iconAnchor: ICON_ANCHOR,
 });
 
 const giftIcon = new L.Icon({
-    iconUrl: '/assets/green-flag.png',
+    iconUrl: '/assets/purple_icon.png',
     iconSize: ICON_SIZE,
     iconAnchor: ICON_ANCHOR,
 });
 
 const balloonIcon = new L.Icon({
-    iconUrl: '/assets/purple-flag.png',
+    iconUrl: '/assets/red_icon.png',
     iconSize: ICON_SIZE,
     iconAnchor: ICON_ANCHOR,
 });

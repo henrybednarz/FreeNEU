@@ -1,4 +1,3 @@
-// src/components/EventAddForm.js
 
 import React, { useState, useEffect } from 'react';
 import '@/styles/EventAddForm.css';
@@ -6,13 +5,13 @@ import '@/styles/EventAddForm.css';
 const TYPE_COLORS = {
     'Food': 'orange',
     'Drink': 'blue',
-    'Party': 'purple',
-    'Gift': 'red',
+    'Event': 'red',
+    'Gift': 'purple',
     'Other': 'green'
 };
 
 const EventInputForm = ({ formData, onFormDataChange, onSelectLocationFromMap, onSubmit }) => {
-    const eventTypes = ['Food', 'Drink', 'Party', 'Gift', 'Other'];
+    const eventTypes = ['Food', 'Drink', 'Event', 'Gift', 'Other'];
     const [validationErrors, setValidationErrors] = useState({});
 
     useEffect(() => {
