@@ -44,7 +44,7 @@ html, body {
         width: 90%;
         justify-self: center;
         position: absolute;
-        bottom: 10%;
+        bottom: 15%;
         display: flex;
         justify-content: space-between;
         z-index: 2000;
