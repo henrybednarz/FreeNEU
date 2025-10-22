@@ -279,30 +279,33 @@ export default function Home() {
                 </motion.div>
             </AnimatePresence>
 
-            <div className="radio-container">
-                <SwitchSelector
-                    option1={MAP_VIEW}
-                    option2={EVENT_VIEW}
-                    onSwitch={handleViewSwitch}
-                    setShowForm={closeForms}
-                    value={currentView}
-                />
+            <div className="menu-container">
+                <div className="mail-button-container">
+                    <IconButton
+                        type="mail"
+                        onClick={handleToggleEmailForm}
+                    />
+                </div>
+
+                <div className="radio-container">
+                    <SwitchSelector
+                        option1={MAP_VIEW}
+                        option2={EVENT_VIEW}
+                        onSwitch={handleViewSwitch}
+                        setShowForm={closeForms}
+                        value={currentView}
+                    />
+                </div>
+
+                <div className="plus-button-container">
+                    <IconButton
+                        type="plus"
+                        isOpen={showEventForm}
+                        onClick={handleToggleForm}
+                    />
+                </div>
             </div>
 
-            <div className="plus-button-container">
-                <IconButton
-                    type="plus"
-                    isOpen={showEventForm}
-                    onClick={handleToggleForm}
-                />
-            </div>
-
-            <div className="mail-button-container">
-                <IconButton
-                    type="mail"
-                    onClick={handleToggleEmailForm}
-                />
-            </div>
 
             <motion.div
                 className="page-container"

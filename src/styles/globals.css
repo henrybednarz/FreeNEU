@@ -40,9 +40,17 @@ html, body {
         overflow: hidden;
     }
 
-    .radio-container {
+    .menu-container {
+        width: 90%;
+        justify-self: center;
         position: absolute;
-        bottom: 5%;
+        bottom: 10%;
+        display: flex;
+        justify-content: space-between;
+        z-index: 2000;
+    }
+
+    .radio-container {
         width: 100%;
         display: flex;
         justify-content: center;
@@ -50,16 +58,10 @@ html, body {
     }
 
     .plus-button-container {
-        position: absolute;
-        bottom: 5%;
-        right: 5%;
         z-index: 2000;
     }
 
     .mail-button-container {
-        position: absolute;
-        bottom: 5%;
-        left: 5%;
         z-index: 2000;
     }
 

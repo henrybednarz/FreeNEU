@@ -1,15 +1,15 @@
 @import './variables.css';
 
 .switch-container {
-    height: 5vh;
+    height: 6vh;
     width: 25vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px var(--main-color) solid;
+    border: 3px var(--main-color) solid;
     background-color: var(--bg-color);
     box-shadow: 2px 2px var(--main-color);
-    border-radius: 3vh;
+    border-radius: 4vh;
     position: relative;
 }
 
