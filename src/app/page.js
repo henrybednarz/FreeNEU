@@ -12,7 +12,7 @@ import EmailAddForm from "@/components/EmailAddForm.js";
 import IconButton from "@/components/IconButton.js";
 
 import { useEvents } from '@/hooks/useEvents.js';
-import { useGeolocation } from '@/hooks/useGeolocation.js';
+import { useGeolocation } from '@/hooks/useGeoLocation.js';
 import { useNotification } from '@/hooks/useNotification.js';
 import { useEmailForm } from '@/hooks/useEmailForm.js';
 import { useEventForm } from '@/hooks/useEventForm.js';
