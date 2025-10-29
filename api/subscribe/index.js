@@ -1,83 +1,105 @@
-import db from '../../db.js';
+import db from '../../utils/db.js';
 
-// Set this to your website's homepage
-const BASE_URL = 'https://your-website.com';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://your-website.com';
 
 export default async function handler(req, res) {
-    if (req.method === 'POST') {
-        if (!req.body.email || !req.body.name) {
-            return res.status(400).json({ success: false, message: 'Name and email are required.' });
+    try {
+        switch (req.method) {
+            case 'POST':
+                return await handlePost(req, res);
+            case 'DELETE':
+                return await handleDelete(req, res);
+            case 'GET':
+                return await handleGet(req, res);
+            default:
+                res.setHeader('Allow', ['GET', 'POST', 'DELETE']);
+                return res.status(405).end(`Method ${req.method} Not Allowed`);
         }
-
-        const response = await postEmail(req.body);
-        if (response.success) {
-            return res.status(200).json(response);
-        } else {
-            return res.status(500).json(response);
-        }
-
-    } else if (req.method === 'DELETE') {
-        if (!req.body.email) {
-            return res.status(400).json({ success: false, message: 'Email is required.' });
-        }
-        const response = await removeEmail(req.body);
-        if (response.success) {
-            return res.status(200).json(response);
-        } else {
-            return res.status(500).json(response);
-        }
-
-    } else if (req.method === 'GET') {
-        if (!req.query.email) {
-            return res.status(400).json({ success: false, message: 'Email is required in query parameter.' });
-        }
-
-        const response = await removeEmail({ email: req.query.email });
-
-        if (response.success) {
-            return res.redirect(302, `${BASE_URL}/?unsubscribed=true`);
-        } else {
-            return res.redirect(302, `${BASE_URL}/?unsubscribe_failed=true`);
-        }
-    } else {
-        res.setHeader('Allow', ['GET', 'POST', 'DELETE']);
-        return res.status(405).end(`Method ${req.method} Not Allowed`);
+    } catch (err) {
+        console.error('Subscribe API handler error:', err);
+        return res.status(500).json({ success: false, message: 'Internal server error' });
     }
 }
 
+async function handlePost(req, res) {
+    const { email, name } = req.body;
+    if (!email || !name) {
+        return res.status(400).json({ success: false, message: 'Name and email are required.' });
+    }
 
-async function removeEmail(body) {
-    const query = `DELETE FROM users WHERE email = $1`;
-    const values = [body.email];
+    const response = await upsertEmailSubscriber(name, email);
+    return response.success ? res.status(200).json(response) : res.status(500).json(response);
+}
+
+async function handleDelete(req, res) {
+    const { email } = req.body;
+    if (!email) {
+        return res.status(400).json({ success: false, message: 'Email is required.' });
+    }
+
+    const response = await unsubscribeEmail(email);
+    return response.success ? res.status(200).json(response) : res.status(500).json(response);
+}
+
+// Handles unsubscribe links from emails
+async function handleGet(req, res) {
+    const { email } = req.query;
+    if (!email) {
+        return res.status(400).json({ success: false, message: 'Email is required in query parameter.' });
+    }
+
+    const response = await unsubscribeEmail(email);
+
+    if (response.success) {
+        return res.redirect(302, `${BASE_URL}/?unsubscribed=true`);
+    } else {
+        return res.redirect(302, `${BASE_URL}/?unsubscribe_failed=true`);
+    }
+}
+
+/**
+ * Inserts a new user or updates an existing one to set emailsOn = true.
+ * Sets emailsOn = true, notificationsOn = false (if new)
+ */
+async function upsertEmailSubscriber(name, email) {
+    const query = `
+        INSERT INTO users (name, email, emails, notifications)
+        VALUES ($1, $2, true, false)
+            ON CONFLICT (email) DO UPDATE
+                                       SET emails = true,
+                                       name = EXCLUDED.name
+                                       RETURNING *
+    `;
+    const values = [name, email];
     try {
         const result = await db.query(query, values);
-        if (result.rowCount > 0) {
-            return { success: true, message: 'User removed successfully' };
-        } else {
-            return { success: true, message: 'User not found or already unsubscribed.' };
-        }
+        return { success: true, message: 'User subscribed to emails', user: result.rows[0] };
     } catch (error) {
-        console.error('Database query error:', error);
+        console.error('Database query error (upsertEmailSubscriber):', error);
         return { success: false, message: 'Database error occurred' };
     }
 }
 
-async function postEmail(body) {
+/**
+ * Sets emailsOn = false for a given user.
+ */
+async function unsubscribeEmail(email) {
     const query = `
-        INSERT INTO users (name, email)
-        VALUES ($1, $2)
-            ON CONFLICT (email) DO UPDATE SET name = EXCLUDED.name
+        UPDATE users 
+        SET emails = false 
+        WHERE email = $1
+        RETURNING *
     `;
-    const values = [body.name, body.email];
+    const values = [email];
     try {
         const result = await db.query(query, values);
         if (result.rowCount > 0) {
-            return { success: true, message: 'User saved successfully', user: result.rows[0] };
+            return { success: true, message: 'User unsubscribed from emails' };
         } else {
-            return { success: true, message: 'User already exists.' };
+            return { success: true, message: 'User not found.' };
         }
     } catch (error) {
-        console.error('Database query error:', error);
+        console.error('Database query error (unsubscribeEmail):', error);
         return { success: false, message: 'Database error occurred' };
     }
 }

@@ -41,10 +41,9 @@ html, body {
     }
 
     .menu-container {
-        width: 90%;
-        justify-self: center;
+        width: 100%;
         position: absolute;
-        bottom: 15%;
+        bottom: 5%;
         display: flex;
         justify-content: space-between;
         z-index: 2000;
@@ -59,10 +58,12 @@ html, body {
 
     .plus-button-container {
         z-index: 2000;
+        margin-right: 10px;
     }
 
     .mail-button-container {
         z-index: 2000;
+        margin-left: 10px;
     }
 
     .location-marker {

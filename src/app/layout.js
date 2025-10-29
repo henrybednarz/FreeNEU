@@ -1,5 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import ServiceWorkerRegistration from "../components/ServiceWorkerRegistration";
 import "../styles/globals.css";
+import Head from "next/head";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,10 +20,15 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
-      </body>
+      <html lang="en">
+        <Head>
+            <link rel="manifest" href="/manifest.js" />
+            <meta name="theme-color" content="#000000" />
+        </Head>
+          <body className={`${geistSans.variable} ${geistMono.variable}`}>
+            <ServiceWorkerRegistration />
+            {children}
+          </body>
     </html>
   );
 }
