@@ -1,6 +1,6 @@
 'use server';
 import db from '../utils/db.js'
-import { sendEventNotifications } from '#/email.js'
+import { sendEventNotifications } from '../utils/email.js'
 
 export default async function handler(req, res) {
     const authHeader = req.headers['authorization'];
