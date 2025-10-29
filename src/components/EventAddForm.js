@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import '@/styles/EventAddForm.css';
 
@@ -101,16 +100,15 @@ const EventInputForm = ({ formData, onFormDataChange, onSelectLocationFromMap, o
                 </div>
 
                 <div className="form-group">
-                    <label className="form-label">Address</label>
-                    <div className={`address-container`}>
+                    <label className="form-label">Location</label>
+                    <div className="address-container">
                         <input
                             type="text"
                             name="address"
                             value={formData.address}
                             onChange={handleChange}
-                            className="address-input"
-                            placeholder="Enter address or select from map"
-                            readOnly
+                            className="form-input"
+                            placeholder="Pick location"
                         />
                         <button onClick={handleMapSelect}
                                 className={`map-button ${formData.latitude && formData.longitude ? 'location-selected' : ''} ${validationErrors.location ? 'input-error' : ''}`}>

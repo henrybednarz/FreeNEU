@@ -99,7 +99,7 @@ const EmailInputForm = ({ formData, onFormDataChange, onSubmit }) => {
             <div className="event-input-form">
                 <div className="form-header">
                     <h3 className="form-title">Get Notified</h3>
-                    <div className="form-subtext">Sign up for email notifications of the latest events. Optionally enable push notifications.</div>
+                    <div className="form-subtext">Sign up for email and push notifications of the latest events.</div>
                 </div>
 
                 <div className="form-group">
@@ -127,8 +127,7 @@ const EmailInputForm = ({ formData, onFormDataChange, onSubmit }) => {
                     />
                     {validationErrors.email && <p className="error-message">{validationErrors.email}</p>}
                 </div>
-
-                <div className="form-group">
+                <div className="form-group button">
                     <button
                         onClick={enableNotifications}
                         disabled={subscribed || subscribing}
@@ -136,18 +135,12 @@ const EmailInputForm = ({ formData, onFormDataChange, onSubmit }) => {
                         type="button"
                     >
                         <div className="submit-button-pill">
-                            {subscribing ? 'Enabling...' : (subscribed ? 'Subscribed to notifications' : 'Enable notifications')}
+                            {subscribing ? 'Enabling...' : (subscribed ? 'Subscribed to notifications' : 'Push Notifications')}
                         </div>
                     </button>
-                    <div style={{ marginTop: 4, fontSize: 12, color: '#666' }}>
-                        {subscribed ? 'Push notifications enabled for this email.' : 'Push requires a valid email and service worker.'}
-                    </div>
-                </div>
-
-                <div className="form-group button">
                     <button onClick={handleSubmit} className="submit-button">
                         <div className="submit-button-pill">
-                            Submit
+                            Email Alerts
                         </div>
                     </button>
                 </div>

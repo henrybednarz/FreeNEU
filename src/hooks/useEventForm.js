@@ -34,7 +34,6 @@ export const useEventForm = () => {
 
     const toggleForm = useCallback(() => {
         setShowEventForm(prev => !prev);
-        console.log('Toggling form, new state:', !showEventForm);
         if (showEventForm) {
             setNewEventData(initialFormState);
         }
