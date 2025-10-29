@@ -1,5 +1,5 @@
 import db from '../../utils/db.js'
-import {sendPushToAll} from '../../utils/push-notification.js'
+import { sendPushToAll } from '../../utils/push-notification.js'
 
 const BASE_URL = process.env.BASE_URL || 'https://localhost:3000'
 
@@ -82,8 +82,7 @@ async function postEvent(event) {
         if (result.rowCount > 0) {
             const insertedEvent = result.rows[0]
 
-            // Fire and forget
-            sendPushToAll({
+            await sendPushToAll({
                 title: `New ${insertedEvent.type} spotted: ${insertedEvent.name || 'Unnamed Event'}`,
                 body: insertedEvent.description || 'A new event was added',})
 
