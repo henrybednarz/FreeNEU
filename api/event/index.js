@@ -82,11 +82,6 @@ async function postEvent(event) {
         if (result.rowCount > 0) {
             const insertedEvent = result.rows[0]
 
-            try {
-                await notifySubscriptions(insertedEvent)
-            } catch (notifyErr) {
-                console.error('Error notifying subscriptions:', notifyErr)
-            }
             // Fire and forget
             sendPushToAll({
                 title: `New ${insertedEvent.type} spotted: ${insertedEvent.name || 'Unnamed Event'}`,
@@ -119,66 +114,4 @@ async function updateLastClaimed(eventId) {
         console.error('Database error:', err)
         return {success: false, message: 'Database error occurred.'}
     }
-}
-
-/*
- Helper functions for push notifications
- Assumes a `subscriptions` table with at least: id, email, subscription (JSON stored as text)
-*/
-
-async function getSubscriptions() {
-    const q = `SELECT id, email, subscription
-               FROM subscriptions`
-    const {rows} = await db.query(q, [])
-    return rows.map(r => ({
-        id: r.id,
-        email: r.email,
-        subscription: JSON.parse(r.subscription)
-    }))
-}
-
-async function removeSubscriptionById(id) {
-    try {
-        await db.query(`DELETE
-                        FROM subscriptions
-                        WHERE id = $1`, [id])
-    } catch (err) {
-        console.error('Failed to remove subscription id', id, err)
-    }
-}
-
-async function notifySubscriptions(event) {
-    if (!VAPID_PUBLIC_KEY || !VAPID_PRIVATE_KEY) {
-        console.warn('Skipping notifications: VAPID keys not configured.')
-        return
-    }
-
-    const subs = await getSubscriptions()
-    if (!subs.length) return
-
-    const payload = {
-        title: 'New Event Created',
-        body: event.name || 'A new event was added',
-        data: {
-            eventId: event.id,
-            url: `${BASE_URL}/events/${event.id}`
-        }
-    }
-
-    const promises = subs.map(async s => {
-        try {
-            await webpush.sendNotification(s.subscription, JSON.stringify(payload))
-        } catch (err) {
-            // If subscription is no longer valid, remove it from DB
-            const status = err && err.statusCode
-            if (status === 410 || status === 404) {
-                console.log('Removing stale subscription id', s.id)
-                await removeSubscriptionById(s.id)
-            } else {
-                console.error('Failed to send notification to subscription id', s.id, err)
-            }
-        }
-    })
-
-    await Promise.all(promises)
 }
