@@ -65,7 +65,7 @@
 .chip-container {
     display: flex;
     flex-wrap: nowrap;
-    gap: 8px;
+    gap: 4px;
     width: 100%;
 }
 
@@ -78,10 +78,9 @@
     white-space: nowrap;
     overflow: hidden;
     border-radius: 9999px;
-    font-size: 0.875rem;
-    font-weight: 600;
+    font-size: 0.85rem;
+    font-weight: bold;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
     border: 0 solid;
