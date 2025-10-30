@@ -3,7 +3,12 @@ import '@/styles/FormCard.css';
 
 const EmailInputForm = ({ formData, onFormDataChange, onSubmit, onSubmitNotification, submissionState }) => {
     const [validationErrors, setValidationErrors] = useState({});
+    const [notificationsEnabled, setNotificationsEnabled] = useState(false); // Default to false
 
+    useEffect(() => {
+        const storedValue = window.localStorage.getItem('userNotificationsEnabled');
+        setNotificationsEnabled(storedValue === 'true');
+    }, []);
 
     useEffect(() => {
         setValidationErrors({});
@@ -90,14 +95,14 @@ const EmailInputForm = ({ formData, onFormDataChange, onSubmit, onSubmitNotifica
                 <div className="form-group button">
                     <button
                         onClick={handleNotificationSubmit}
-                        disabled={submissionState.isSubmittingNotification || window.localStorage.getItem('userNotificationsEnabled') === 'true'}
+                        disabled={submissionState.isSubmittingNotification || notificationsEnabled}
                         className="submit-button"
                         type="button"
                     >
                         <div className="submit-button-pill">
-                            {window.localStorage.getItem('userNotificationsEnabled') === 'true' ? 'Notifications Enabled' : 'Push Notifications'}
+                            {notificationsEnabled ? 'Notifications Enabled' : 'Push Notifications'}
                         </div>
-                    </button>
+                    </button>notificationsEnabled
                     <button
                         onClick={handleSubmit}
                         disabled={submissionState.isSubmittingEmail}

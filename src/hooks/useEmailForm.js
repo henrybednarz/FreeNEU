@@ -1,26 +1,33 @@
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 export const useEmailForm = () => {
-    const initialEmailFormState = {
-        name: window.localStorage.getItem('userName') ||'',
-        email: window.localStorage.getItem('userEmail') || '',
-    };
+    const [emailFormData, setEmailFormData] = useState({
+        name: '',
+        email: '',
+    });
 
-    const [emailFormData, setEmailFormData] = useState(initialEmailFormState);
+    useEffect(() => {
+        const initialEmailFormState = {
+            name: localStorage.getItem('userName') || '',
+            email: localStorage.getItem('userEmail') || '',
+        };
+        setEmailFormData(initialEmailFormState);
+    }, []);
+
     const [showEmailForm, setShowEmailForm] = useState(false);
     const [isSubmittingEmail, setIsSubmittingEmail] = useState(false);
     const [isSubmittingNotification, setIsSubmittingNotification] = useState(false);
 
     const resetEmailForm = useCallback(() => {
-        setEmailFormData(initialEmailFormState);
+        setEmailFormData(emailFormData);
         setShowEmailForm(false);
         setIsSubmittingEmail(false);
-    }, [initialEmailFormState]);
+    }, []);
 
     const openEmailForm = useCallback(() => {
         setEmailFormData(initialEmailFormState);
         setShowEmailForm(true);
-    }, [initialEmailFormState]);
+    }, []);
 
     const closeEmailForm = useCallback(() => {
         setShowEmailForm(false);
@@ -80,9 +87,9 @@ export const useEmailForm = () => {
                 }),
             });
             if (response.ok) {
-                window.localStorage.setItem('userEmail', formData.email);
-                window.localStorage.setItem('userName', formData.name);
-                window.localStorage.setItem('userNotificationsEnabled', 'true');
+                localStorage.setItem('userEmail', formData.email);
+                localStorage.setItem('userName', formData.name);
+                localStorage.setItem('userNotificationsEnabled', 'true');
             } else {
                 const errorData = await response.json();
                 throw new Error(errorData.message || 'Failed to submit notification subscription.');
@@ -109,9 +116,9 @@ export const useEmailForm = () => {
             });
 
             if (response.ok) {
-                window.localStorage.setItem('userEmail', formData.email);
-                window.localStorage.setItem('userName', formData.name);
-                window.localStorage.setItem('userEmailsEnabled', 'true');
+                localStorage.setItem('userEmail', formData.email);
+                localStorage.setItem('userName', formData.name);
+                localStorage.setItem('userEmailsEnabled', 'true');
             } else {
                 const errorData = await response.json();
                 throw new Error(errorData.message || 'Failed to submit email.');
