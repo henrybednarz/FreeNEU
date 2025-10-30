@@ -83,9 +83,8 @@ async function postEvent(event) {
             const insertedEvent = result.rows[0]
 
             await sendPushToAll({
-                title: `New ${insertedEvent.type} spotted: ${insertedEvent.name || 'Unnamed Event'}`,
-                body: insertedEvent.description || 'A new event was added',})
-
+                title: `New Event Spotted`,
+                body: insertedEvent.name || 'A new event was added',})
             return {success: true, message: 'Event saved successfully!', event: insertedEvent}
         } else {
             return {success: false, message: 'Failed to save event.'}

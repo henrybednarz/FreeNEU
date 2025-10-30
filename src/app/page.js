@@ -10,6 +10,7 @@ import NotificationBanner from "@/components/NotificationBanner.js";
 import EventStatus from "@/components/EventStatus.js";
 import EmailAddForm from "@/components/EmailAddForm.js";
 import IconButton from "@/components/IconButton.js";
+import PWAInfoCard from "@/components/PWAInfoCard";
 
 import { useEvents } from '@/hooks/useEvents.js';
 import { useGeolocation } from '@/hooks/useGeoLocation.js';
@@ -18,6 +19,7 @@ import { useEmailForm } from '@/hooks/useEmailForm.js';
 import { useEventForm } from '@/hooks/useEventForm.js';
 import { useViewManager } from '@/hooks/useViewManager.js';
 import { useEventStatus } from '@/hooks/useEventStatus.js';
+import { usePWAInfoCard } from "@/hooks/usePWAInfoCard";
 
 const MAP_VIEW = 'Map';
 const EVENT_VIEW = 'Events';
@@ -48,6 +50,16 @@ const formOverlayVariants = {
     },
 };
 
+const pwaOverlayVariants = {
+    active: {
+        opacity: 1, y: 0, pointerEvents: 'auto',
+        transition: { type: "tween", ease: "anticipate", duration: 0.7 }
+    },
+    inactiveBottom: {
+        opacity: 0, y: "100%", pointerEvents: 'none',
+        transition: { type: "tween", ease: "anticipate", duration: 0.7 }
+    },
+}
 
 const Map = dynamic(
     () => import('@/components/Map'),
@@ -83,6 +95,9 @@ export default function Home() {
         initialEmailFormState,
         emailFormData,
         updateEmailForm,
+        submitNotification,
+        isSubmittingNotification,
+        setIsSubmittingNotification
     } = useEmailForm();
     const {
         currentView,
@@ -97,10 +112,20 @@ export default function Home() {
         openEventStatus,
         closeEventStatus
     } = useEventStatus();
+    const {
+        isPWAInfoCardVisible,
+        showPWAInfoCard,
+        closePWAInfoCard
+    } = usePWAInfoCard();
 
     useEffect(() => {
         if (geoError) {
             showNotification(geoError, 'error');
+        }
+        const params = new URLSearchParams(window.location.search);
+        const isPwa = params.has('source');
+        if (!isPwa) {
+            showPWAInfoCard();
         }
     }, [geoError, showNotification]);
 
@@ -133,11 +158,7 @@ export default function Home() {
     };
 
     const handleFormSubmit = async (formData) => {
-        if (!formData.name || !formData.description || !formData.address ||
-            formData.latitude === null || formData.longitude === null) {
-            showNotification('Please fill in all fields, including selecting a location from the map.', 'error');
-            return;
-        }
+        if (isSubmitting) { return }
 
         setIsSubmitting(true);
         const result = await createEvent(formData);
@@ -152,21 +173,20 @@ export default function Home() {
     };
 
     const handleEmailFormSubmit = async (formData) => {
+        if (isSubmittingEmail) { return }
         const result = await submitEmail(formData);
         setIsSubmitting(false);
         if (result.success) {
-            resetEmailForm();
             showNotification('Email submitted successfully!', 'success');
         } else {
             showNotification(result.error, 'error');
         }
+        setIsSubmitting(false);
     }
 
     const handleStillHere = async () => {
         if (!focusedEvent) return;
-
         const result = await updateEvent(focusedEvent.id);
-
         if (result.success) {
             focusEvent({ ...focusedEvent, last_claimed: result.timestamp });
             closeEventStatus();
@@ -274,8 +294,25 @@ export default function Home() {
                         formData={emailFormData}
                         onFormDataChange={updateEmailForm}
                         onSubmit={handleEmailFormSubmit}
-                        isSubmitting={isSubmittingEmail}
+                        onSubmitNotification={submitNotification}
+                        submissionState={{
+                            isSubmittingEmail: isSubmittingEmail,
+                            isSubmittingNotification: isSubmittingNotification,
+                    }}
+
                     />
+                </motion.div>
+            </AnimatePresence>
+
+            <AnimatePresence>
+                <motion.div
+                    className={`pwa-container ${isPWAInfoCardVisible ? 'form-active' : 'form-hidden'}`}
+                    variants={pwaOverlayVariants}
+                    animate={isPWAInfoCardVisible ? 'active' : 'inactiveBottom'}
+                >
+                 <PWAInfoCard
+                     onClose={closePWAInfoCard}
+                 />
                 </motion.div>
             </AnimatePresence>
 

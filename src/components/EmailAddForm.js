@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import '@/styles/EventAddForm.css'; // Re-using the same styles
+import '@/styles/FormCard.css';
 
-const EmailInputForm = ({ formData, onFormDataChange, onSubmit }) => {
+const EmailInputForm = ({ formData, onFormDataChange, onSubmit, onSubmitNotification, submissionState }) => {
     const [validationErrors, setValidationErrors] = useState({});
-    const [subscribed, setSubscribed] = useState(false);
-    const [subscribing, setSubscribing] = useState(false);
+
 
     useEffect(() => {
         setValidationErrors({});
@@ -20,61 +19,22 @@ const EmailInputForm = ({ formData, onFormDataChange, onSubmit }) => {
         return re.test(String(email).toLowerCase());
     };
 
-    function urlBase64ToUint8Array(base64String) {
-        const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-        const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-        const rawData = atob(base64);
-        return Uint8Array.from([...rawData].map((c) => c.charCodeAt(0)));
-    }
-
-    async function enableNotifications() {
+    const handleNotificationSubmit = () => {
         if (!('Notification' in window) || !('serviceWorker' in navigator)) return;
-        if (!formData.email || !validateEmail(formData.email)) {
-            setValidationErrors((prev) => ({ ...prev, email: 'Valid email is required to enable notifications.' }));
-            return;
+        const newErrors = {};
+        if (!formData.name) {
+            newErrors.name = "Name is required.";
         }
+        if (!formData.email) {
+            newErrors.email = "Email address is required.";
+        } else if (!validateEmail(formData.email)) {
+            newErrors.email = "Please enter a valid email address.";
+        }
+        setValidationErrors(newErrors);
 
-        try {
-            setSubscribing(true);
-            const perm = await Notification.requestPermission();
-            if (perm !== 'granted') {
-                setSubscribing(false);
-                return;
-            }
-
-            const vapidResp = await fetch('/api/notifications?vapid=public');
-            if (!vapidResp.ok) {
-                console.error('Failed to fetch VAPID public key');
-                setSubscribing(false);
-                return;
-            }
-            const vapidJson = await vapidResp.json();
-            const publicKey = vapidJson.publicKey;
-            const reg = await navigator.serviceWorker.ready;
-            const subscription = await reg.pushManager.subscribe({
-                userVisibleOnly: true,
-                applicationServerKey: urlBase64ToUint8Array(publicKey),
-            });
-
-            const resp = await fetch('/api/notifications', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    email: formData.email,
-                    name: formData.name,
-                    subscription
-                }),
-            });
-
-            if (resp.ok) {
-                setSubscribed(true);
-            } else {
-                console.error('Failed to save subscription');
-            }
-        } catch (err) {
-            console.error('Subscription error:', err);
-        } finally {
-            setSubscribing(false);
+        if (Object.keys(newErrors).length === 0) {
+            console.log('sending notification subscription request');
+            onSubmitNotification(formData);
         }
     }
 
@@ -129,18 +89,21 @@ const EmailInputForm = ({ formData, onFormDataChange, onSubmit }) => {
                 </div>
                 <div className="form-group button">
                     <button
-                        onClick={enableNotifications}
-                        disabled={subscribed || subscribing}
+                        onClick={handleNotificationSubmit}
+                        disabled={submissionState.isSubmittingNotification || window.localStorage.getItem('userNotificationsEnabled') === 'true'}
                         className="submit-button"
                         type="button"
                     >
                         <div className="submit-button-pill">
-                            {subscribing ? 'Enabling...' : (subscribed ? 'Subscribed to notifications' : 'Push Notifications')}
+                            {window.localStorage.getItem('userNotificationsEnabled') === 'true' ? 'Notifications Enabled' : 'Push Notifications'}
                         </div>
                     </button>
-                    <button onClick={handleSubmit} className="submit-button">
+                    <button
+                        onClick={handleSubmit}
+                        disabled={submissionState.isSubmittingEmail}
+                        className="submit-button">
                         <div className="submit-button-pill">
-                            Email Alerts
+                            {submissionState.isSubmittingEmail ? 'Subscribing...' : 'Email Updates'}
                         </div>
                     </button>
                 </div>

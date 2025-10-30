@@ -32,7 +32,6 @@ export default async function handler(req, res) {
 
 async function handlePost(req, res) {
     const { email, subscription, name } = req.body;
-
     if (!email || !subscription) {
         return res.status(400).json({ success: false, message: 'Email and subscription object are required.' });
     }

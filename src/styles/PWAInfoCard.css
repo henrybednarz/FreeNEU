@@ -1,0 +1,58 @@
+@import './variables.css';
+
+.header-text {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--font-color-dark);
+    margin: 4px;
+}
+
+.subtitle-text {
+    font-size: 1rem;
+    color: var(--font-color-dark);
+    margin-top: 8px;
+    margin-bottom: 4px;
+}
+
+.instruction-text {
+    font-size: 1rem;
+    color: var(--font-color-dark);
+}
+
+.home-screen-reference {
+    width: 100%;
+    background-color: lightgray;
+    justify-content: center;
+    display: flex;
+    border-radius: 5px;
+}
+
+.add-to-home-button {
+    margin: 3px;
+    width: 90%;
+    background-color: var(--bg-color);
+    border-radius: 12px;
+    padding-left: 8px;
+    padding-right: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: var(--font-color-secondary) 1px solid;
+}
+
+.add-to-home-text {
+    font-size: 1rem;
+    color: #000000;
+}
+
+.add-to-home-icon svg {
+    width: 40px;
+    height: 40px;
+}
+
+.dismiss {
+    font-size: 0.875rem;
+    color: var(--font-color-secondary);
+    cursor: pointer;
+    margin-top: 4px;
+}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '@/styles/EventAddForm.css';
+import '@/styles/FormCard.css';
 
 const TYPE_COLORS = {
     'Food': 'orange',
@@ -9,7 +9,7 @@ const TYPE_COLORS = {
     'Other': 'green'
 };
 
-const EventInputForm = ({ formData, onFormDataChange, onSelectLocationFromMap, onSubmit }) => {
+const EventInputForm = ({ formData, onFormDataChange, onSelectLocationFromMap, onSubmit, isSubmitting }) => {
     const eventTypes = ['Food', 'Drink', 'Event', 'Gift', 'Other'];
     const [validationErrors, setValidationErrors] = useState({});
 
@@ -117,9 +117,13 @@ const EventInputForm = ({ formData, onFormDataChange, onSelectLocationFromMap, o
                     </div>
                 </div>
                 <div className="form-group button">
-                    <button onClick={handleSubmit} className="submit-button">
+                    <button
+                        onClick={handleSubmit}
+                        className="submit-button"
+                        disabled={isSubmitting}
+                    >
                         <div className="submit-button-pill">
-                            Create Event
+                            {isSubmitting ? 'Submitting...' : 'Create Event'}
                         </div>
                     </button>
                 </div>

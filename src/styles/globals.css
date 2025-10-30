@@ -85,4 +85,14 @@ html, body {
         opacity: 0;
     }
 
+    .pwa-container {
+        justify-content: center;
+        bottom: 15%;
+        width: 100%;
+        height: auto;
+        z-index: 2000;
+        display: flex;
+        position: absolute;
+    }
+
 }

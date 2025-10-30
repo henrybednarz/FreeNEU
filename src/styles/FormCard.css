@@ -12,6 +12,12 @@
     margin-bottom: 16px;
 }
 
+.selected {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    transform: translateY(3px);
+    box-shadow: 3px 3px var(--main-color);
+}
+
 .event-input-form {
     display: flex;
     flex-direction: column;
@@ -54,12 +60,13 @@
     font-family: inherit;
     background-color: var(--bg-color);
     color: var(--font-color-dark);
-    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     outline: none;
 }
 
 .form-input:focus {
-    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 2px 2px var(--main-color);
 }
 
 .chip-container {
@@ -169,14 +176,16 @@
     font-family: inherit;
     background-color: var(--bg-color);
     color: var(--font-color-dark);
-    resize: vertical;
+    resize: none;
     min-height: 80px;
-    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     outline: none;
 }
 
 .form-textarea:focus {
-    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 2px 2px var(--main-color);
+
 }
 
 .address-container {
@@ -185,11 +194,12 @@
 }
 
 .address-input:focus {
-    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 2px 2px var(--main-color);
 }
 
 .map-button {
-    padding: 12px 16px;
+    padding: 4px 16px;
     background-color: var(--bg-color);
     color: var(--font-color-dark);
     border: 2px solid var(--main-color);
@@ -199,7 +209,6 @@
     cursor: pointer;
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     box-shadow: 1px 1px var(--main-color);
-    /*white-space: nowrap;*/
 }
 
 .map-button:hover {
@@ -248,6 +257,15 @@
     box-shadow: 1px 1px var(--main-color);
 }
 
+.submit-button:disabled {
+    background-color: var(--font-color-secondary);
+    border-color: var(--font-color-secondary);
+    color: var(--bg-color);
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
 .input-error {
     border: 2px solid var(--red-chip-color);
     box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1);
@@ -261,14 +279,10 @@
 }
 
 .address-container .form-input {
-    /* This tells the input to grow and shrink to fill all remaining space */
     flex: 1;
-
-    /* This allows the input to shrink below its default minimum size */
     min-width: 0;
 }
 
 .address-container .map-button {
-    /* This prevents the button from shrinking when space is tight */
     flex-shrink: 0;
 }
