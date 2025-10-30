@@ -122,7 +122,7 @@ export default function Home() {
         if (geoError) {
             showNotification(geoError, 'error');
         }
-        const params = new URLSearchParams();
+        const params = new URLSearchParams(window.location.search);
         const isPwa = params.has('source');
         if (!isPwa) {
             showPWAInfoCard();

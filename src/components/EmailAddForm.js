@@ -102,7 +102,7 @@ const EmailInputForm = ({ formData, onFormDataChange, onSubmit, onSubmitNotifica
                         <div className="submit-button-pill">
                             {notificationsEnabled ? 'Notifications Enabled' : 'Push Notifications'}
                         </div>
-                    </button>notificationsEnabled
+                    </button>
                     <button
                         onClick={handleSubmit}
                         disabled={submissionState.isSubmittingEmail}
