@@ -1,7 +1,6 @@
 'use server';
 import db from '../utils/db.js'
 import { sendEventNotifications } from '../utils/email.js'
-import { Analytics } from "@vercel/analytics/next"
 
 export default async function handler(req, res) {
     const authHeader = req.headers['authorization'];
