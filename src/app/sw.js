@@ -1,5 +1,13 @@
-self.addEventListener('install', (e) => self.skipWaiting());
-self.addEventListener('activate', (e) => self.clients.claim());
+import { clientsClaim } from 'workbox-core';
+import { precacheAndRoute } from 'workbox-precaching';
+
+// 1. WORKBOX: PRECACHING
+// This placeholder will be replaced by the next-pwa plugin
+// with a list of all your Next.js assets (pages, chunks, icons, etc.)
+precacheAndRoute(self.__WB_MANIFEST);
+
+self.skipWaiting();
+clientsClaim();
 
 self.addEventListener('push', (event) => {
     const data = event.data ? event.data.json() : { title: 'New event', body: '' };
