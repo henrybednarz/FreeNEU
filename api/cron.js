@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     }
 
     await removeExpiredEvents();
-    await sendEventNotifications(process.env.RESEND_KEY);
+    // await sendEventNotifications(process.env.RESEND_KEY);
 
     res.status(200).end('Cron tasks completed successfully');
 }

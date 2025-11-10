@@ -15,17 +15,14 @@ export const useEmailForm = () => {
     }, []);
 
     const [showEmailForm, setShowEmailForm] = useState(false);
-    const [isSubmittingEmail, setIsSubmittingEmail] = useState(false);
     const [isSubmittingNotification, setIsSubmittingNotification] = useState(false);
 
     const resetEmailForm = useCallback(() => {
         setEmailFormData(emailFormData);
         setShowEmailForm(false);
-        setIsSubmittingEmail(false);
     }, []);
 
     const openEmailForm = useCallback(() => {
-        setEmailFormData(initialEmailFormState);
         setShowEmailForm(true);
     }, []);
 
@@ -48,17 +45,46 @@ export const useEmailForm = () => {
         return Uint8Array.from([...rawData].map((c) => c.charCodeAt(0)));
     }
 
-    const submitNotification = useCallback(async (formData) => {
+    const unsubscribeNotification = useCallback(async (formData) => {
         if (isSubmittingNotification) return;
         setIsSubmittingNotification(true);
-        console.log('trying to begin VAPID process');
+        try {
+            const response = await fetch('/api/notifications/', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: formData.email,
+                    name: formData.name,
+                }),
+            });
+            if (response.ok) {
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userName');
+                localStorage.setItem('userNotificationsEnabled', 'false');
+                return response;
+            } else {
+                const errorData = await response.json();
+                return response;
+            }
+        } catch (error) {
+            return {success: false, message: error};
+        } finally {
+            setIsSubmittingNotification(false);
+        }
+
+    }, [isSubmittingNotification])
+
+    const subscribeNotification = useCallback(async (formData) => {
+        if (isSubmittingNotification) return;
+        setIsSubmittingNotification(true);
         try {
             const perm = await Notification.requestPermission();
             if (perm !== 'granted') {
                 setIsSubmittingNotification(false);
                 return;
             }
-            console.log('browser permission granted');
             const vapidResp = await fetch('/api/notifications?vapid=public');
             if (!vapidResp.ok) {
                 console.error('Failed to fetch VAPID public key');
@@ -68,13 +94,11 @@ export const useEmailForm = () => {
             const vapidJson = await vapidResp.json();
             const publicKey = vapidJson.publicKey;
             const reg = await navigator.serviceWorker.ready;
-            console.log('acquired public key')
             const subscription = await reg.pushManager.subscribe({
                 userVisibleOnly: true,
                 applicationServerKey: urlBase64ToUint8Array(publicKey),
             });
 
-            console.log('subscribing')
             const response = await fetch('/api/notifications/', {
                 method: 'POST',
                 headers: {
@@ -90,9 +114,9 @@ export const useEmailForm = () => {
                 localStorage.setItem('userEmail', formData.email);
                 localStorage.setItem('userName', formData.name);
                 localStorage.setItem('userNotificationsEnabled', 'true');
+                return response;
             } else {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to submit notification subscription.');
+                return response
             }
         } catch (error) {
             console.error('Error submitting email:', error);
@@ -102,51 +126,17 @@ export const useEmailForm = () => {
         }
     }, [isSubmittingNotification]);
 
-
-    const submitEmail = useCallback(async (formData) => {
-        if (isSubmittingEmail) return;
-        setIsSubmittingEmail(true);
-        try {
-            const response = await fetch('/api/subscribe/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
-
-            if (response.ok) {
-                localStorage.setItem('userEmail', formData.email);
-                localStorage.setItem('userName', formData.name);
-                localStorage.setItem('userEmailsEnabled', 'true');
-            } else {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to submit email.');
-            }
-
-            closeEmailForm();
-            return { success: true, message: 'Email submitted successfully.' };
-        } catch (error) {
-            console.error('Error submitting email:', error);
-            return { success: false, message: error };
-        } finally {
-            setIsSubmittingEmail(false);
-        }
-    }, [closeEmailForm, isSubmittingEmail]);
-
     return {
         emailFormData,
         showEmailForm,
-        isSubmittingEmail,
-        setIsSubmittingEmail,
         isSubmittingNotification,
         setIsSubmittingNotification,
         openEmailForm,
         closeEmailForm,
         toggleEmailForm,
         resetEmailForm,
-        submitEmail,
-        submitNotification,
+        subscribeNotification,
+        unsubscribeNotification,
         updateEmailForm,
     };
 };

@@ -1,17 +1,6 @@
 'use client';
 import {useEffect, useMemo} from 'react';
-import dynamic from 'next/dynamic';
 import '@/styles/globals.css';
-import SwitchSelector from "@/components/SwitchSelector.js";
-import EventList from '@/components/EventList.js';
-import { motion, AnimatePresence } from 'framer-motion';
-import EventAddForm from "@/components/EventAddForm.js";
-import NotificationBanner from "@/components/NotificationBanner.js";
-import EventStatus from "@/components/EventStatus.js";
-import EmailAddForm from "@/components/EmailAddForm.js";
-import IconButton from "@/components/IconButton.js";
-import PWAInfoCard from "@/components/PWAInfoCard";
-
 import { useEvents } from '@/hooks/useEvents.js';
 import { useGeolocation } from '@/hooks/useGeoLocation.js';
 import { useNotification } from '@/hooks/useNotification.js';
@@ -21,50 +10,14 @@ import { useViewManager } from '@/hooks/useViewManager.js';
 import { useEventStatus } from '@/hooks/useEventStatus.js';
 import { usePWAInfoCard } from "@/hooks/usePWAInfoCard";
 
+import FormOverlays from '@/components/FormOverlays.js';
+import AppMenu from '@/components/AppMenu.js';
+import ViewContainer from '@/components/ViewContainer.js';
+import NotificationOverlay from '@/components/NotificationOverlay.js';
+import PWAOverlay from '@/components/PWAOverlay.js';
+
 const MAP_VIEW = 'Map';
 const EVENT_VIEW = 'Events';
-
-const viewVariants = {
-    active: {
-        opacity: 1, x: 0, pointerEvents: 'auto',
-        transition: { type: "tween", ease: "anticipate", duration: 0.7 }
-    },
-    inactiveLeft: {
-        opacity: 0, x: "-100%", pointerEvents: 'none',
-        transition: { type: "tween", ease: "anticipate", duration: 0.7 }
-    },
-    inactiveRight: {
-        opacity: 0, x: "100%", pointerEvents: 'none',
-        transition: { type: "tween", ease: "anticipate", duration: 0.7 }
-    }
-};
-
-const formOverlayVariants = {
-    active: {
-        opacity: 1, y: 0, pointerEvents: 'auto',
-        transition: { type: "tween", ease: "anticipate", duration: 0.7 }
-    },
-    inactiveTop: {
-        opacity: 0, y: "-100%", pointerEvents: 'none',
-        transition: { type: "tween", ease: "anticipate", duration: 0.7 }
-    },
-};
-
-const pwaOverlayVariants = {
-    active: {
-        opacity: 1, y: 0, pointerEvents: 'auto',
-        transition: { type: "tween", ease: "anticipate", duration: 0.7 }
-    },
-    inactiveBottom: {
-        opacity: 0, y: "100%", pointerEvents: 'none',
-        transition: { type: "tween", ease: "anticipate", duration: 0.7 }
-    },
-}
-
-const Map = dynamic(
-    () => import('@/components/Map'),
-    { loading: () => <p>A map is loading...</p>, ssr: false }
-);
 
 export default function Home() {
     const { eventsData, createEvent, updateEvent, deleteEvent } = useEvents();
@@ -85,17 +38,14 @@ export default function Home() {
     } = useEventForm();
     const {
         showEmailForm,
-        isSubmittingEmail,
-        setIsSubmittingEmail,
         openEmailForm,
         closeEmailForm,
         toggleEmailForm,
         resetEmailForm,
-        submitEmail,
-        initialEmailFormState,
         emailFormData,
         updateEmailForm,
-        submitNotification,
+        subscribeNotification,
+        unsubscribeNotification,
         isSubmittingNotification,
         setIsSubmittingNotification
     } = useEmailForm();
@@ -117,6 +67,7 @@ export default function Home() {
         showPWAInfoCard,
         closePWAInfoCard
     } = usePWAInfoCard();
+
 
     useEffect(() => {
         if (geoError) {
@@ -159,34 +110,48 @@ export default function Home() {
 
     const handleFormSubmit = async (formData) => {
         if (isSubmitting) { return }
-
         setIsSubmitting(true);
-        const result = await createEvent(formData);
-        setIsSubmitting(false);
-
+        const request = await createEvent(formData);
+        const result = await request.json();
         if (result.success) {
             resetForm();
             showNotification('Event created successfully!', 'success');
         } else {
             showNotification(result.error, 'error');
         }
+        setIsSubmitting(false);
     };
 
-    const handleEmailFormSubmit = async (formData) => {
-        if (isSubmittingEmail) { return }
-        const result = await submitEmail(formData);
-        setIsSubmitting(false);
+    const handleNotificationSubscribe = async (formData) => {
+        if (isSubmittingNotification) { return }
+        const request = await subscribeNotification(formData);
+        const result = await request.json();
         if (result.success) {
             showNotification('Email submitted successfully!', 'success');
+            closeEmailForm();
         } else {
             showNotification(result.error, 'error');
         }
-        setIsSubmitting(false);
+        setIsSubmittingNotification(false);
+    }
+
+    const handleNotificationUnsubscribe = async (formData) => {
+        if (isSubmittingNotification) { return }
+        const request = await unsubscribeNotification(formData);
+        const result = await request.json();
+        if (result.success) {
+            showNotification('Unsubscribed from notifications successfully!', 'success');
+            resetEmailForm();
+        } else {
+            showNotification(result.error, 'error');
+        }
+        setIsSubmittingNotification(false);
     }
 
     const handleStillHere = async () => {
         if (!focusedEvent) return;
-        const result = await updateEvent(focusedEvent.id);
+        const request = await updateEvent(focusedEvent.id);
+        const result = await request.json();
         if (result.success) {
             focusEvent({ ...focusedEvent, last_claimed: result.timestamp });
             closeEventStatus();
@@ -198,9 +163,8 @@ export default function Home() {
 
     const handleExpired = async () => {
         if (!focusedEvent) return;
-
-        const result = await deleteEvent(focusedEvent.id);
-
+        const request = await deleteEvent(focusedEvent.id);
+        const result = await request.json();
         if (result.success) {
             clearFocus();
             closeEventStatus();
@@ -231,148 +195,80 @@ export default function Home() {
         toggleEmailForm();
     }
 
+    const eventStatusProps = {
+        show: showEventStatus,
+        onClose: closeEventStatus,
+        event: focusedEvent,
+        onCheck: handleStillHere,
+        onX: handleExpired
+    };
+
+    const eventFormProps = {
+        show: showEventForm,
+        formData: newEventData,
+        onChange: updateFormData,
+        onSubmit: handleFormSubmit,
+        onSelectLocation: handleSelectLocation,
+        isSubmitting: isSubmitting
+    };
+
+    const emailFormProps = {
+        show: showEmailForm,
+        formData: emailFormData,
+        onChange: updateEmailForm,
+        onSubmitNotification: handleNotificationSubscribe,
+        onSubmitRemoveNotification: handleNotificationUnsubscribe,
+        isSubmitting: isSubmittingNotification,
+    };
+
+    const mapProps = {
+        events: eventsData,
+        focusedEvent: focusedEvent,
+        onPinClick: handlePinClick,
+        onMapClick: handleMapClick,
+        isAddingEvent: isSelectingLocation,
+        userLocation: userLocation
+    };
+
+    const eventListProps = {
+        events: eventsData,
+        onCardClick: handleCardClick,
+        focusedEvent: focusedEvent,
+        userLocation: userLocation
+    };
+
     return (
         <div className="app-container">
-            {/* Notification Banner */}
-            <AnimatePresence>
-                {notification && (
-                    <motion.div
-                        key="notification-banner"
-                        initial={{ x: "100%", opacity: 0 }}
-                        animate={{ x: "-50%", opacity: 1 }}
-                        exit={{ x: "100%", opacity: 0 }}
-                        transition={{ duration: 0.5, ease: "easeOut" }}
-                        className="notification-banner-wrapper"
-                    >
-                        <NotificationBanner
-                            message={notification.message}
-                            type={notification.type}
-                            onClose={clearNotification}
-                        />
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            <NotificationOverlay
+                notification={notification}
+                onClose={clearNotification}
+            />
 
-            <AnimatePresence>
-                <motion.div
-                    className={`form-container ${showEventStatus ? 'form-active' : 'form-hidden'}`}
-                    variants={formOverlayVariants}
-                    animate={showEventStatus ? 'active' : 'inactiveTop'}
-                >
-                    <EventStatus
-                        setShowEventStatus={closeEventStatus}
-                        event={focusedEvent}
-                        onCheck={handleStillHere}
-                        onX={handleExpired}
-                    />
-                </motion.div>
-            </AnimatePresence>
+            <FormOverlays
+                eventStatusProps={eventStatusProps}
+                eventFormProps={eventFormProps}
+                emailFormProps={emailFormProps}
+            />
 
-            <AnimatePresence>
-                <motion.div
-                    className={`form-container ${showEventForm ? 'form-active' : 'form-hidden'}`}
-                    variants={formOverlayVariants}
-                    animate={showEventForm ? 'active' : 'inactiveTop'}
-                >
-                    <EventAddForm
-                        formData={newEventData}
-                        onFormDataChange={updateFormData}
-                        onSubmit={handleFormSubmit}
-                        onSelectLocationFromMap={handleSelectLocation}
-                        isSubmitting={isSubmitting}
-                    />
-                </motion.div>
-            </AnimatePresence>
+            <PWAOverlay
+                isVisible={isPWAInfoCardVisible}
+                onClose={closePWAInfoCard}
+            />
 
-            <AnimatePresence>
-                <motion.div
-                    className={`form-container ${showEmailForm ? 'form-active' : 'form-hidden'}`}
-                    variants={formOverlayVariants}
-                    animate={showEmailForm ? 'active' : 'inactiveTop'}
-                >
-                    <EmailAddForm
-                        formData={emailFormData}
-                        onFormDataChange={updateEmailForm}
-                        onSubmit={handleEmailFormSubmit}
-                        onSubmitNotification={submitNotification}
-                        submissionState={{
-                            isSubmittingEmail: isSubmittingEmail,
-                            isSubmittingNotification: isSubmittingNotification,
-                    }}
+            <AppMenu
+                currentView={currentView}
+                isEventFormOpen={showEventForm}
+                onSwitchView={handleViewSwitch}
+                onCloseForms={closeForms}
+                onToggleEmailForm={handleToggleEmailForm}
+                onToggleEventForm={handleToggleForm}
+            />
 
-                    />
-                </motion.div>
-            </AnimatePresence>
-
-            <AnimatePresence>
-                <motion.div
-                    className={`pwa-container ${isPWAInfoCardVisible ? 'form-active' : 'form-hidden'}`}
-                    variants={pwaOverlayVariants}
-                    animate={isPWAInfoCardVisible ? 'active' : 'inactiveBottom'}
-                >
-                 <PWAInfoCard
-                     onClose={closePWAInfoCard}
-                 />
-                </motion.div>
-            </AnimatePresence>
-
-            <div className="menu-container">
-                <div className="mail-button-container">
-                    <IconButton
-                        type="mail"
-                        onClick={handleToggleEmailForm}
-                    />
-                </div>
-
-                <div className="radio-container">
-                    <SwitchSelector
-                        option1={MAP_VIEW}
-                        option2={EVENT_VIEW}
-                        onSwitch={handleViewSwitch}
-                        setShowForm={closeForms}
-                        value={currentView}
-                    />
-                </div>
-
-                <div className="plus-button-container">
-                    <IconButton
-                        type="plus"
-                        isOpen={showEventForm}
-                        onClick={handleToggleForm}
-                    />
-                </div>
-            </div>
-
-
-            <motion.div
-                className="page-container"
-                variants={viewVariants}
-                animate={currentView === MAP_VIEW ? 'active' : 'inactiveLeft'}
-            >
-                <div className="map-container">
-                    <Map
-                        events={eventsData}
-                        focusedEvent={focusedEvent}
-                        onPinClick={handlePinClick}
-                        onMapClick={handleMapClick}
-                        isAddingEvent={isSelectingLocation}
-                        userLocation={userLocation}
-                    />
-                </div>
-            </motion.div>
-
-            <motion.div
-                className="event-container"
-                variants={viewVariants}
-                animate={currentView === EVENT_VIEW ? 'active' : 'inactiveRight'}
-            >
-                <EventList
-                    events={eventsData}
-                    onCardClick={handleCardClick}
-                    focusedEvent={focusedEvent}
-                    userLocation={userLocation}
-                />
-            </motion.div>
+            <ViewContainer
+                currentView={currentView}
+                mapProps={mapProps}
+                eventListProps={eventListProps}
+            />
         </div>
     );
 }

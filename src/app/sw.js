@@ -1,13 +1,29 @@
 import { clientsClaim } from 'workbox-core';
 import { precacheAndRoute } from 'workbox-precaching';
+import { registerRoute } from 'workbox-routing';
+import { CacheFirst } from 'workbox-strategies';
+import { ExpirationPlugin } from 'workbox-expiration';
 
-// 1. WORKBOX: PRECACHING
-// This placeholder will be replaced by the next-pwa plugin
-// with a list of all your Next.js assets (pages, chunks, icons, etc.)
+
 precacheAndRoute(self.__WB_MANIFEST);
 
 self.skipWaiting();
 clientsClaim();
+
+registerRoute(
+    ({ request, url }) =>
+        request.destination === 'image' && url.pathname.startsWith('/assets/'),
+    new CacheFirst({
+        cacheName: 'asset-image-cache',
+        plugins: [
+            new ExpirationPlugin({
+                maxEntries: 100, // Store up to 100 images
+                maxAgeSeconds: 30 * 24 * 60 * 60, // Store for 30 days
+                purgeOnQuotaError: true,
+            }),
+        ],
+    })
+);
 
 self.addEventListener('push', (event) => {
     const data = event.data ? event.data.json() : { title: 'New event', body: '' };

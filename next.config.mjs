@@ -5,7 +5,7 @@ const withPWA = pwa({
     register: true,
     skipWaiting: true,
     sw: 'sw.js',
-    swSrc: 'app/sw.js'
+    swSrc: './src/app/sw.js'
 });
 
 /** @type {import('next').NextConfig} */

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import '@/styles/FormCard.css';
 
-const EmailInputForm = ({ formData, onFormDataChange, onSubmit, onSubmitNotification, submissionState }) => {
+const EmailInputForm = ({ formData, onFormDataChange, onSubmitNotification, onSubmitRemoveNotification, isSubmitting }) => {
     const [validationErrors, setValidationErrors] = useState({});
-    const [notificationsEnabled, setNotificationsEnabled] = useState(false); // Default to false
+    const [notificationsEnabled, setNotificationsEnabled] = useState(false);
 
     useEffect(() => {
         const storedValue = window.localStorage.getItem('userNotificationsEnabled');
@@ -24,7 +24,7 @@ const EmailInputForm = ({ formData, onFormDataChange, onSubmit, onSubmitNotifica
         return re.test(String(email).toLowerCase());
     };
 
-    const handleNotificationSubmit = () => {
+    const handleNotificationSubscribe = async () => {
         if (!('Notification' in window) || !('serviceWorker' in navigator)) return;
         const newErrors = {};
         if (!formData.name) {
@@ -38,26 +38,16 @@ const EmailInputForm = ({ formData, onFormDataChange, onSubmit, onSubmitNotifica
         setValidationErrors(newErrors);
 
         if (Object.keys(newErrors).length === 0) {
-            console.log('sending notification subscription request');
             onSubmitNotification(formData);
+            setNotificationsEnabled(true);
         }
     }
 
-    const handleSubmit = () => {
-        const newErrors = {};
-        if (!formData.name) {
-            newErrors.name = "Name is required.";
-        }
-        if (!formData.email) {
-            newErrors.email = "Email address is required.";
-        } else if (!validateEmail(formData.email)) {
-            newErrors.email = "Please enter a valid email address.";
-        }
-        setValidationErrors(newErrors);
-        if (Object.keys(newErrors).length === 0) {
-            onSubmit(formData);
-        }
-    };
+    const handleNotificationUnsubscribe = async () => {
+        if (!('Notification' in window) || !('serviceWorker' in navigator)) return;
+        onSubmitRemoveNotification(formData);
+        setNotificationsEnabled(false);
+    }
 
     return (
         <div className="event-input-container">
@@ -73,6 +63,7 @@ const EmailInputForm = ({ formData, onFormDataChange, onSubmit, onSubmitNotifica
                         type="text"
                         name="name"
                         value={formData.name}
+                        disabled={notificationsEnabled}
                         onChange={handleChange}
                         className={`form-input ${validationErrors.name ? 'input-error' : ''}`}
                         placeholder="Enter your full name"
@@ -86,6 +77,7 @@ const EmailInputForm = ({ formData, onFormDataChange, onSubmit, onSubmitNotifica
                         type="email"
                         name="email"
                         value={formData.email}
+                        disabled={notificationsEnabled}
                         onChange={handleChange}
                         className={`form-input ${validationErrors.email ? 'input-error' : ''}`}
                         placeholder="Enter your email address"
@@ -94,21 +86,13 @@ const EmailInputForm = ({ formData, onFormDataChange, onSubmit, onSubmitNotifica
                 </div>
                 <div className="form-group button">
                     <button
-                        onClick={handleNotificationSubmit}
-                        disabled={submissionState.isSubmittingNotification || notificationsEnabled}
-                        className="submit-button"
+                        onClick={notificationsEnabled ? handleNotificationUnsubscribe : handleNotificationSubscribe}
+                        disabled={isSubmitting}
+                        className={`submit-button ${notificationsEnabled ? 'unsubscribe' : ''}`}
                         type="button"
                     >
                         <div className="submit-button-pill">
-                            {notificationsEnabled ? 'Notifications Enabled' : 'Push Notifications'}
-                        </div>
-                    </button>
-                    <button
-                        onClick={handleSubmit}
-                        disabled={submissionState.isSubmittingEmail}
-                        className="submit-button">
-                        <div className="submit-button-pill">
-                            {submissionState.isSubmittingEmail ? 'Subscribing...' : 'Email Updates'}
+                            {notificationsEnabled ? 'Disable Notifications' : 'Enable Notifications'}
                         </div>
                     </button>
                 </div>
