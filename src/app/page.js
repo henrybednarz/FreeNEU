@@ -104,7 +104,11 @@ export default function Home() {
     };
 
     const handleMapClick = async ({ lat, lng }) => {
-        if (!isSelectingLocation) return;
+        if (!isSelectingLocation) {
+            closeEmailForm();
+            closeForm();
+            return
+        }
         await handleLocationSelected(lat, lng);
     };
 
@@ -112,7 +116,7 @@ export default function Home() {
         if (isSubmitting) { return }
         setIsSubmitting(true);
         const request = await createEvent(formData);
-        const result = await request.json();
+        const result = await request;
         if (result.success) {
             resetForm();
             showNotification('Event created successfully!', 'success');
@@ -125,7 +129,7 @@ export default function Home() {
     const handleNotificationSubscribe = async (formData) => {
         if (isSubmittingNotification) { return }
         const request = await subscribeNotification(formData);
-        const result = await request.json();
+        const result = await request;
         if (result.success) {
             showNotification('Email submitted successfully!', 'success');
             closeEmailForm();
@@ -138,7 +142,7 @@ export default function Home() {
     const handleNotificationUnsubscribe = async (formData) => {
         if (isSubmittingNotification) { return }
         const request = await unsubscribeNotification(formData);
-        const result = await request.json();
+        const result = await request;
         if (result.success) {
             showNotification('Unsubscribed from notifications successfully!', 'success');
             resetEmailForm();
@@ -151,7 +155,7 @@ export default function Home() {
     const handleStillHere = async () => {
         if (!focusedEvent) return;
         const request = await updateEvent(focusedEvent.id);
-        const result = await request.json();
+        const result = await request;
         if (result.success) {
             focusEvent({ ...focusedEvent, last_claimed: result.timestamp });
             closeEventStatus();
@@ -164,7 +168,7 @@ export default function Home() {
     const handleExpired = async () => {
         if (!focusedEvent) return;
         const request = await deleteEvent(focusedEvent.id);
-        const result = await request.json();
+        const result = await request;
         if (result.success) {
             clearFocus();
             closeEventStatus();
