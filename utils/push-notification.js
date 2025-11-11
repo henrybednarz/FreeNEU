@@ -27,6 +27,7 @@ async function removeStaleSubscription(email) {
 
 export async function sendPushToAll(payload) {
     if (!isVapidConfigured) {
+        console.log("VAPID keys not configured. Skipping push notification sending.");
         throw new Error("VAPID keys not configured. Cannot send notifications.");
     }
 

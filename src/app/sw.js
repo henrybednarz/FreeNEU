@@ -4,11 +4,10 @@ import { registerRoute } from 'workbox-routing';
 import { CacheFirst } from 'workbox-strategies';
 import { ExpirationPlugin } from 'workbox-expiration';
 
-
-precacheAndRoute(self.__WB_MANIFEST);
-
 self.skipWaiting();
 clientsClaim();
+
+precacheAndRoute(self.__WB_MANIFEST);
 
 registerRoute(
     ({ request, url }) =>
@@ -26,7 +25,7 @@ registerRoute(
 );
 
 self.addEventListener('push', (event) => {
-    const data = event.data ? event.data.json() : { title: 'New event', body: '' };
+    const data = event.data ? event.data.json() : { title: 'New Event', body: '' };
     const options = { body: data.body, data: data, tag: data.tag || 'event' };
     event.waitUntil(self.registration.showNotification(data.title, options));
 });

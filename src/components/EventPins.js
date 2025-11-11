@@ -50,21 +50,7 @@ const TYPE_FLAGS = {
     "Other": eventIcon
 }
 
-/**
- * Renders a collection of event markers on the map.
- *
- * @param {object} props - The component props.
- * @param {Array<object>} props.events - A list of event objects. Each event must have id, latitude, and longitude.
- * @param {Function} props.onPinClick - A callback function that is executed when a pin is clicked. It receives the event object.
- */
 export default function EventPins({ events, onPinClick, focusedEvent }) {
-    const handleClick = (eventData) => {
-        if (typeof onPinClick === 'function') {
-            onPinClick(eventData);
-        } else {
-            console.warn("onPinClick prop is not a function!");
-        }
-    };
     const isEventFocused = (event) => focusedEvent && focusedEvent.id === event.id;
 
     return (

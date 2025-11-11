@@ -10,6 +10,7 @@ export default async function handler(req, res) {
             return res.status(200).json(eventData)
         } else if (req.method === 'POST') {
             const response = await postEvent(req.body)
+
             if (response.success) {
                 return res.status(201).json(response)
             } else {
@@ -84,7 +85,8 @@ async function postEvent(event) {
 
             await sendPushToAll({
                 title: `New Event Spotted`,
-                body: insertedEvent.name || 'A new event was added',})
+                body: insertedEvent.name || 'A new event was added',}
+            )
             return {success: true, message: 'Event saved successfully!', event: insertedEvent}
         } else {
             return {success: false, message: 'Failed to save event.'}

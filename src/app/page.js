@@ -1,5 +1,5 @@
 'use client';
-import {useEffect, useMemo} from 'react';
+import { useEffect } from 'react';
 import '@/styles/globals.css';
 import { useEvents } from '@/hooks/useEvents.js';
 import { useGeolocation } from '@/hooks/useGeoLocation.js';
@@ -88,6 +88,7 @@ export default function Home() {
     };
 
     const handlePinClick = (event) => {
+        if (isSelectingLocation) return;
         closeEventStatus();
         focusEventAndSwitchView(event, EVENT_VIEW);
     };
