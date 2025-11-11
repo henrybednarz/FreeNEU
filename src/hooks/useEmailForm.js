@@ -63,10 +63,9 @@ export const useEmailForm = () => {
                 localStorage.removeItem('userEmail');
                 localStorage.removeItem('userName');
                 localStorage.setItem('userNotificationsEnabled', 'false');
-                return response;
+                return { success: true, message: response.json() };
             } else {
-                const errorData = await response.json();
-                return response;
+                return { success: false, message: response.json() };
             }
         } catch (error) {
             return {success: false, message: error};
@@ -114,13 +113,13 @@ export const useEmailForm = () => {
                 localStorage.setItem('userEmail', formData.email);
                 localStorage.setItem('userName', formData.name);
                 localStorage.setItem('userNotificationsEnabled', 'true');
-                return response;
+                return { success: true, message: response.json()  };
             } else {
-                return response
+                return { success: false, message: response.json()  }
             }
         } catch (error) {
             console.error('Error submitting email:', error);
-            return {success: false, message: error};
+            return { success: false, message: error };
         } finally {
             setIsSubmittingNotification(false);
         }

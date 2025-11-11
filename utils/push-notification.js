@@ -65,4 +65,5 @@ export async function sendPushToAll(payload) {
     });
 
     const results = await Promise.all(sendPromises);
+    console.log(results);
 }

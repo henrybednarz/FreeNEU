@@ -134,7 +134,8 @@ export default function Home() {
             showNotification('Email submitted successfully!', 'success');
             closeEmailForm();
         } else {
-            showNotification(result.error, 'error');
+            console.log(result)
+            showNotification(`Couldn't subscribe ${result.message}`, 'error');
         }
         setIsSubmittingNotification(false);
     }
