@@ -59,16 +59,17 @@ export const useEmailForm = () => {
                     name: formData.name,
                 }),
             });
+            const data = await response.json();
             if (response.ok) {
                 localStorage.removeItem('userEmail');
                 localStorage.removeItem('userName');
                 localStorage.setItem('userNotificationsEnabled', 'false');
-                return { success: true, message: response.json() };
+                return { success: true, message: data.message };
             } else {
-                return { success: false, message: response.json() };
+                return { success: false, message: data.message };
             }
         } catch (error) {
-            return {success: false, message: error};
+            return { success: false, message: error };
         } finally {
             setIsSubmittingNotification(false);
         }
@@ -82,13 +83,12 @@ export const useEmailForm = () => {
             const perm = await Notification.requestPermission();
             if (perm !== 'granted') {
                 setIsSubmittingNotification(false);
-                return;
+                return { success: false, message: 'Notification permission not granted' };
             }
             const vapidResp = await fetch('/api/notifications?vapid=public');
             if (!vapidResp.ok) {
-                console.error('Failed to fetch VAPID public key');
                 setIsSubmittingNotification(false);
-                return;
+                return { success: false, message: 'Failed to fetch VAPID public key' };
             }
             const vapidJson = await vapidResp.json();
             const publicKey = vapidJson.publicKey;
@@ -109,13 +109,14 @@ export const useEmailForm = () => {
                     subscription,
                 }),
             });
+            const data = await response.json();
             if (response.ok) {
                 localStorage.setItem('userEmail', formData.email);
                 localStorage.setItem('userName', formData.name);
                 localStorage.setItem('userNotificationsEnabled', 'true');
-                return { success: true, message: response.json()  };
+                return { success: true, message: data.message };
             } else {
-                return { success: false, message: response.json()  }
+                return { success: false, message: data.message }
             }
         } catch (error) {
             console.error('Error submitting email:', error);

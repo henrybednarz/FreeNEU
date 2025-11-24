@@ -123,7 +123,7 @@ const EventInputForm = ({ formData, onFormDataChange, onSelectLocationFromMap, o
                         disabled={isSubmitting}
                     >
                         <div className="submit-button-pill">
-                            {isSubmitting ? 'Submitting...' : 'Create Event'}
+                            Create Event
                         </div>
                     </button>
                 </div>

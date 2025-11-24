@@ -48,14 +48,15 @@ export async function sendPushToAll(payload) {
     }
 
     console.log(`Attempting to send notifications to ${subscribers.length} subscribers...`);
-    const payloadString = JSON.stringify(payload);
 
     const sendPromises = subscribers.map(async (user) => {
         try {
-            await webpush.sendNotification(user.subscription, payloadString);
+            const subscription = user.subscription
+            await webpush.sendNotification(subscription, payload);
             return { email: user.email, status: 'success' };
         } catch (error) {
             if (error.statusCode === 410 || error.statusCode === 404) {
+                console.error(`Removing stale subscription for ${user.email}:`, error.body || error.message);
                 await removeStaleSubscription(user.email);
                 return { email: user.email, status: 'stale' };
             } else {

@@ -51,6 +51,7 @@ export const useEventForm = () => {
     const handleLocationSelected = useCallback(async (lat, lng) => {
         setIsSelectingLocation(false);
         setShowEventForm(true);
+        setIsSubmitting(true);
 
         const updatedData = {
             ...newEventData,
@@ -63,6 +64,7 @@ export const useEventForm = () => {
 
         const fetchedAddress = await getAddressFromCoordinates(lat, lng);
         setNewEventData(prev => ({ ...prev, address: fetchedAddress }));
+        setIsSubmitting(false);
     }, [newEventData]);
 
     return {

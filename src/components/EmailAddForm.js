@@ -3,11 +3,23 @@ import '@/styles/FormCard.css';
 
 const EmailInputForm = ({ formData, onFormDataChange, onSubmitNotification, onSubmitRemoveNotification, isSubmitting }) => {
     const [validationErrors, setValidationErrors] = useState({});
+    const [notificationsAllowed, setNotificationsAllowed] = useState(false);
     const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+    const [notificationsSupported, setNotificationsSupported] = useState(true);
 
     useEffect(() => {
-        const storedValue = window.localStorage.getItem('userNotificationsEnabled');
-        setNotificationsEnabled(storedValue === 'true');
+        if (typeof window === 'undefined') return;
+
+        const supported = ('Notification' in window) && ('serviceWorker' in navigator);
+        setNotificationsSupported(supported);
+
+        if (supported) {
+            const permission = Notification.permission;
+            setNotificationsAllowed(permission === 'granted');
+
+            const storedValue = window.localStorage.getItem('userNotificationsEnabled');
+            setNotificationsEnabled(storedValue === 'true' && permission === 'granted');
+        }
     }, []);
 
     useEffect(() => {
@@ -25,7 +37,22 @@ const EmailInputForm = ({ formData, onFormDataChange, onSubmitNotification, onSu
     };
 
     const handleNotificationSubscribe = async () => {
-        if (!('Notification' in window) || !('serviceWorker' in navigator)) return;
+        if (!notificationsSupported) {
+            console.log("Notifications are not supported in this browser.");
+            return;
+        }
+
+        // Request permission if not already granted
+        if (!notificationsAllowed) {
+            const permission = await Notification.requestPermission();
+            setNotificationsAllowed(permission === 'granted');
+
+            if (permission !== 'granted') {
+                console.log("Notification permission not granted.");
+                return;
+            }
+        }
+
         const newErrors = {};
         if (!formData.name) {
             newErrors.name = "Name is required.";
@@ -40,13 +67,40 @@ const EmailInputForm = ({ formData, onFormDataChange, onSubmitNotification, onSu
         if (Object.keys(newErrors).length === 0) {
             onSubmitNotification(formData);
             setNotificationsEnabled(true);
+            window.localStorage.setItem('userNotificationsEnabled', 'true');
         }
     }
 
     const handleNotificationUnsubscribe = async () => {
-        if (!('Notification' in window) || !('serviceWorker' in navigator)) return;
+        if (!notificationsSupported) return;
+
         onSubmitRemoveNotification(formData);
         setNotificationsEnabled(false);
+        window.localStorage.setItem('userNotificationsEnabled', 'false');
+    }
+
+    const isButtonDisabled = () => {
+        if (isSubmitting) return true;
+        if (!notificationsSupported) return true;
+        if (notificationsEnabled) return false; // Unsubscribe button should always be enabled
+        if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'denied') return true;
+        return false;
+    }
+
+    const getButtonText = () => {
+        if (notificationsEnabled) {
+            return 'Disable Notifications';
+        }
+        if (!notificationsSupported) {
+            return 'Notifications Not Supported';
+        }
+        if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'denied') {
+            return 'Notifications Blocked';
+        }
+        if (!notificationsAllowed) {
+            return 'Enable Notifications (Allow Permission)';
+        }
+        return 'Enable Notifications';
     }
 
     return (
@@ -84,18 +138,25 @@ const EmailInputForm = ({ formData, onFormDataChange, onSubmitNotification, onSu
                     />
                     {validationErrors.email && <p className="error-message">{validationErrors.email}</p>}
                 </div>
+
                 <div className="form-group button">
                     <button
                         onClick={notificationsEnabled ? handleNotificationUnsubscribe : handleNotificationSubscribe}
-                        disabled={isSubmitting}
+                        disabled={isButtonDisabled()}
                         className={`submit-button ${notificationsEnabled ? 'unsubscribe' : ''}`}
                         type="button"
                     >
                         <div className="submit-button-pill">
-                            {notificationsEnabled ? 'Disable Notifications' : 'Enable Notifications'}
+                            {getButtonText()}
                         </div>
                     </button>
                 </div>
+
+                {typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'denied' && !notificationsEnabled && (
+                    <p className="error-message" style={{ textAlign: 'center', marginTop: '0.5rem' }}>
+                        Notifications are blocked. Please enable them in your browser settings.
+                    </p>
+                )}
             </div>
         </div>
     );

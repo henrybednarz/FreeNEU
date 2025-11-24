@@ -131,6 +131,7 @@ export default function Home() {
         if (isSubmittingNotification) { return }
         const request = await subscribeNotification(formData);
         const result = await request;
+
         if (result.success) {
             showNotification('Email submitted successfully!', 'success');
             closeEmailForm();
