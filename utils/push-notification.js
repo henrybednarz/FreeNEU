@@ -3,15 +3,21 @@ import db from './db.js';
 
 const VAPID_PUBLIC_KEY = process.env.VAPID_PUBLIC_KEY;
 const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY;
-const VAPID_CONTACT = process.env.VAPID_CONTACT || 'mailto:no-reply@your-website.com';
-
+const VAPID_CONTACT = process.env.VAPID_CONTACT || 'mailto:bednarzhenry@gmail.com';
 let isVapidConfigured = false;
-if (VAPID_PUBLIC_KEY && VAPID_PRIVATE_KEY) {
-    webpush.setVapidDetails(VAPID_CONTACT, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
-    isVapidConfigured = true;
-} else {
-    console.warn('VAPID keys not configured for push sender. Notifications will not work.');
+
+function ensureVapid() {
+    if (isVapidConfigured) return true;
+    if (VAPID_PUBLIC_KEY && VAPID_PRIVATE_KEY) {
+        webpush.setVapidDetails(VAPID_CONTACT, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
+        isVapidConfigured = true;
+        return true;
+    } else {
+        console.warn('VAPID keys not configured for push sender. Notifications will not work.');
+        return false;
+    }
 }
+
 
 async function removeStaleSubscription(email) {
     try {
@@ -26,10 +32,7 @@ async function removeStaleSubscription(email) {
 }
 
 export async function sendPushToAll(payload) {
-    if (!isVapidConfigured) {
-        console.log("VAPID keys not configured. Skipping push notification sending.");
-        throw new Error("VAPID keys not configured. Cannot send notifications.");
-    }
+    if (!ensureVapid()) return;
 
     let subscribers = [];
     try {
@@ -41,18 +44,15 @@ export async function sendPushToAll(payload) {
         console.error("Failed to fetch subscribers from DB:", dbError);
         return;
     }
-
     if (subscribers.length === 0) {
         console.log("No subscribers to send notifications to.");
         return;
     }
 
-    console.log(`Attempting to send notifications to ${subscribers.length} subscribers...`);
-
     const sendPromises = subscribers.map(async (user) => {
         try {
             const subscription = user.subscription
-            await webpush.sendNotification(subscription, payload);
+            await webpush.sendNotification(subscription, JSON.stringify(payload));
             return { email: user.email, status: 'success' };
         } catch (error) {
             if (error.statusCode === 410 || error.statusCode === 404) {

@@ -53,6 +53,7 @@ export default async function handler(req, res) {
         res.status(405).end(`Method ${req.method} Not Allowed`)
     } catch (err) {
         console.error('Handler error:', err)
+        console.log(err.stack)
         return res.status(500).json({success: false, message: 'Internal server error'})
     }
 }
@@ -84,8 +85,14 @@ async function postEvent(event) {
             const insertedEvent = result.rows[0]
 
             await sendPushToAll(
-                "new event spotted"
-            )
+                {
+                    title: "new event spotted",
+                    body: event.name,
+                    data: {
+                        eventId: event.id,
+                        url: `${BASE_URL}/events/${event.id}`
+                    }
+                })
             return {success: true, message: 'Event saved successfully!', event: insertedEvent}
         } else {
             return {success: false, message: 'Failed to save event.'}

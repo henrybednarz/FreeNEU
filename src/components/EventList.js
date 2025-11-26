@@ -1,4 +1,3 @@
-import React from 'react';
 import EventCard from './EventCard';
 import '@/styles/EventList.css';
 
@@ -22,18 +21,19 @@ const EventList = ({ events, focusedEvent, onCardClick, userLocation }) => {
         return Number(bIsClaimable) - Number(aIsClaimable);
     });
 
+
     return (
         <div className="event-list-wrapper">
             <div className="event-list-items">
                 {sortedEvents.length > 0 ? (
                     sortedEvents.map((event) => (
-                        <EventCard
-                            key={event.id}
-                            event={event}
-                            onClick={onCardClick}
-                            isClaimable={isClaimable(event, userLocation)}
-                            isFocused={focusedEvent && focusedEvent.id === event.id}
-                        />
+                            <EventCard
+                                key={event.id}
+                                event={event}
+                                onClick={onCardClick}
+                                isClaimable={isClaimable(event, userLocation)}
+                                isFocused={focusedEvent && focusedEvent.id === event.id}
+                            />
                     ))
                 ) : (
                     <p>No events found.</p>
