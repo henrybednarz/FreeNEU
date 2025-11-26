@@ -6,10 +6,12 @@ const withPWA = pwa({
     skipWaiting: true,
     sw: 'sw.js',
     swSrc: './src/app/sw.js',
-    buildExcludes: [
-        /marker-icon.*\.png$/,
-        /marker-shadow.*\.png$/
-    ],
+    workboxOptions: {
+        exclude: [
+            /marker-icon.*?\.png$/,
+            /marker-shadow.*?\.png$/
+        ],
+    },
 });
 
 /** @type {import('next').NextConfig} */
