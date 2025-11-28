@@ -1,56 +1,71 @@
-import { clientsClaim } from 'workbox-core';
-import { precacheAndRoute } from 'workbox-precaching';
-import { registerRoute } from 'workbox-routing';
-import { CacheFirst } from 'workbox-strategies';
-import { ExpirationPlugin } from 'workbox-expiration';
+import { defaultCache } from "@serwist/next/worker";
+import { installSerwist } from "@serwist/sw";
 
-self.skipWaiting();
-clientsClaim();
+const customRuntimeCaching = [
+    {
+        urlPattern: ({ request, url }) => request.destination === 'image' && url.pathname.startsWith('/assets/'),
+        handler: 'CacheFirst',
+        options: {
+            cacheName: 'icon-assets',
+            expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 Days
+            },
+        },
+    },
+    ...defaultCache,
+];
 
+installSerwist({
+    precacheEntries: self.__SW_MANIFEST,
+    skipWaiting: true,
+    clientsClaim: true,
+    navigationPreload: true,
+    runtimeCaching: customRuntimeCaching,
+});
+
+// 1. Push Notifications
 self.addEventListener('push', (event) => {
-    console.log('[SW] Push Received via Service Worker');
-
     let data;
     try {
-        data = event.data ? event.data.json() : null;
+        data = event.data.json();
     } catch (e) {
-        console.error('[SW] JSON Parse Failed:', e);
-        console.log('[SW] Raw data:', event.data.text());
-        data = { title: 'Notification', body: event.data.text() };
+        // Fallback for non-JSON payloads
+        data = { title: 'FreeNEU', body: event.data.text() };
     }
-
-    if (!data) data = { title: 'New Event', body: 'test' };
 
     const options = {
         body: data.body,
-        data: data,
-        tag: data.tag || 'event',
-        // icon: '/icons/icon-192x192.png', // Ensure this path exists!
-        // badge: '/icons/badge-72x72.png'   // Ensure this path exists!
+        icon: '/assets/blue_icon.png', // Default icon
+        badge: '/assets/blue_icon.png',
+        vibrate: [100, 50, 100],
+        data: {
+            url: data.url || '/'
+        }
     };
 
-    event.waitUntil(self.registration.showNotification(data.title, options));
+    event.waitUntil(
+        self.registration.showNotification(data.title, options)
+    );
 });
 
 self.addEventListener('notificationclick', (event) => {
     event.notification.close();
     const url = event.notification.data?.url || '/';
-    event.waitUntil(self.clients.openWindow(url));
+
+    event.waitUntil(
+        clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
+            // Check if there is already a window/tab open with the target URL
+            for (let i = 0; i < windowClients.length; i++) {
+                const client = windowClients[i];
+                if (client.url === url && 'focus' in client) {
+                    return client.focus();
+                }
+            }
+            // If not, open a new window
+            if (clients.openWindow) {
+                return clients.openWindow(url);
+            }
+        })
+    );
 });
-
-precacheAndRoute(self.__WB_MANIFEST);
-
-registerRoute(
-    ({ request, url }) =>
-        request.destination === 'image' && url.pathname.startsWith('/assets/'),
-    new CacheFirst({
-        cacheName: 'asset-image-cache',
-        plugins: [
-            new ExpirationPlugin({
-                maxEntries: 100, // Store up to 100 images
-                maxAgeSeconds: 30 * 24 * 60 * 60, // Store for 30 days
-                purgeOnQuotaError: true,
-            }),
-        ],
-    })
-);

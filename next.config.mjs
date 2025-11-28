@@ -1,17 +1,14 @@
-import pwa from '@ducanh2912/next-pwa';
+import withSerwistInit from "@serwist/next";
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const withPWA = pwa({
-    dest: 'public',
-    register: true,
-    skipWaiting: true,
-    sw: 'sw.js',
-    swSrc: './src/app/sw.js',
-    workboxOptions: {
-        exclude: [
-            /marker-icon.*?\.png$/,
-            /marker-shadow.*?\.png$/
-        ],
-    },
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const withSerwist = withSerwistInit({
+    swSrc: path.join(__dirname, 'src/app/sw.js'),
+    swDest: 'public/sw.js',
+    disable: process.env.NODE_ENV === 'development',
 });
 
 /** @type {import('next').NextConfig} */
@@ -19,4 +16,4 @@ const nextConfig = {
     reactStrictMode: true,
 };
 
-export default withPWA(nextConfig);
+export default withSerwist(nextConfig);

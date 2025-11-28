@@ -1,8 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import ServiceWorkerRegistration from "../components/ServiceWorkerRegistration";
 import "../styles/globals.css";
-import Head from "next/head";
-import {Analytics} from "@vercel/analytics/next";
+import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const geistSans = Geist({
@@ -20,19 +19,19 @@ export const metadata = {
   description: "Find Freebies at Northeastern",
 };
 
+export const viewport = {
+  themeColor: "#000000",
+};
+
 export default function RootLayout({ children }) {
   return (
-      <html lang="en">
-        <Head>
-            <link rel="manifest" href="/manifest.js" />
-            <meta name="theme-color" content="#000000" />
-        </Head>
-          <body className={`${geistSans.variable} ${geistMono.variable}`}>
-          { /* <ServiceWorkerRegistration /> */ }
-            <Analytics/>
-            <SpeedInsights/>
-            {children}
-          </body>
+    <html lang="en">
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <ServiceWorkerRegistration />
+        <Analytics />
+        <SpeedInsights />
+        {children}
+      </body>
     </html>
   );
 }

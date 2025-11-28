@@ -5,11 +5,14 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "clean": "rm -rf .next public/sw.js public/workbox-*.js"
   },
   "dependencies": {
-    "@ducanh2912/next-pwa": "^10.2.9",
     "@maplibre/maplibre-gl-leaflet": "^0.1.3",
+    "@serwist/next": "^9.2.3",
+    "@serwist/precaching": "^9.2.3",
+    "@serwist/sw": "^9.2.3",
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
     "framer-motion": "^12.23.22",

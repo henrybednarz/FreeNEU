@@ -8,16 +8,36 @@ export default function manifest() {
         background_color: '#ffffff',
         theme_color: '#000000',
         icons: [
-            // {
-            //     src: '/icon-192x192.png',
-            //     sizes: '192x192',
-            //     type: 'image/png',
-            // },
-            // {
-            //     src: '/icon-512x512.png',
-            //     sizes: '512x512',
-            //     type: 'image/png',
-            // },
+            {
+                src: '/assets/blue_icon.png',
+                sizes: '1024x1024',
+                type: 'image/png',
+            },
+            {
+                src: '/assets/green_icon.png',
+                sizes: '1024x1024',
+                type: 'image/png',
+            },
+            {
+                src: '/assets/orange_icon.png',
+                sizes: '1024x1024',
+                type: 'image/png',
+            },
+            {
+                src: '/assets/person-icon.png',
+                sizes: '1024x1024',
+                type: 'image/png',
+            },
+            {
+                src: '/assets/purple_icon.png',
+                sizes: '1024x1024',
+                type: 'image/png',
+            },
+            {
+                src: '/assets/red_icon.png',
+                sizes: '1024x1024',
+                type: 'image/png',
+            },
         ],
     }
 }
