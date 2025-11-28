@@ -3,7 +3,7 @@ import { installSerwist } from "@serwist/sw";
 
 const customRuntimeCaching = [
     {
-        urlPattern: ({ request, url }) => request.destination === 'image' && url.pathname.startsWith('/assets/'),
+        matcher: ({ request, url }) => request.destination === 'image' && url.pathname.startsWith('/assets/'),
         handler: 'CacheFirst',
         options: {
             cacheName: 'icon-assets',
