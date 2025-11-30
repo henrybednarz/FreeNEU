@@ -11,13 +11,17 @@ export default function AppMenu({
                                     onSwitchView,
                                     onCloseForms,
                                     onToggleEmailForm,
-                                    onToggleEventForm
+                                    onToggleEventForm,
+                                    showNotificationBtn
                                 }) {
     return (
         <div className="menu-container">
-            <div className="mail-button-container">
+            <div
+                className="bell-button-container"
+                style={{ visibility: showNotificationBtn ? 'visible' : 'hidden' }}
+            >
                 <IconButton
-                    type="mail"
+                    type="bell"
                     onClick={onToggleEmailForm}
                 />
             </div>

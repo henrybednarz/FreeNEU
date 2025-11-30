@@ -1,5 +1,22 @@
 @import './variables.css';
 
+.pwa-container {
+    width: 100%;
+    height: 60%;
+}
+
+.pwa-card {
+    background-color: var(--bg-color);
+    border-radius: 16px;
+    border: 2px solid var(--main-color);
+    padding: 18px;
+    box-shadow: 2px 2px var(--card-shadow);
+    width: 80%;
+    max-width: 600px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    margin-bottom: 16px;
+}
+
 .header-text {
     font-size: 1.5rem;
     font-weight: 600;
@@ -51,6 +68,8 @@
 }
 
 .dismiss {
+    position: absolute;
+    bottom: 7%;
     font-size: 0.875rem;
     color: var(--font-color-secondary);
     cursor: pointer;

@@ -1,5 +1,5 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import '@/styles/globals.css';
 import { useEvents } from '@/hooks/useEvents.js';
 import { useGeolocation } from '@/hooks/useGeoLocation.js';
@@ -20,6 +20,7 @@ const MAP_VIEW = 'Map';
 const EVENT_VIEW = 'Events';
 
 export default function Home() {
+    const [isPwaMode, setIsPwaMode] = useState(false);
     const { eventsData, createEvent, updateEvent, deleteEvent } = useEvents();
     const { userLocation, error: geoError } = useGeolocation();
     const { notification, showNotification, clearNotification } = useNotification();
@@ -74,7 +75,8 @@ export default function Home() {
             showNotification(geoError, 'error');
         }
         const params = new URLSearchParams(window.location.search);
-        const isPwa = params.has('source');
+        const isPwa = params.get('source') === 'pwa';
+        setIsPwaMode(isPwa);
         if (!isPwa) {
             showPWAInfoCard();
         }
@@ -269,6 +271,7 @@ export default function Home() {
                 onCloseForms={closeForms}
                 onToggleEmailForm={handleToggleEmailForm}
                 onToggleEventForm={handleToggleForm}
+                showNotificationBtn={isPwaMode}
             />
 
             <ViewContainer

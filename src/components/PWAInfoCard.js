@@ -4,11 +4,13 @@ import '@/styles/PWAInfoCard.css';
 
 const PWAInfoCard = ({ onClose }) => {
     return (
-        <div className="event-input-container selected">
-            <div className="event-input-form">
+            <div className="pwa-card">
                 <div className="form-header">
                     <h3 className="form-title">Are you in your browser?</h3>
-                    <div className="subtitle-text">FreeNEU is best used when added to your homescreen.</div>
+                    <div className="subtitle-text">Add <strong>FreeNEU</strong> to your home screen for full-screen browsing and push notifications</div>
+                    <div>
+                        <hr/>
+                    </div>
                     <div className="instruction-text">To add me to your device,</div>
                     <div className="instruction-text">
                         <b>1.</b> Press the share <svg
@@ -48,7 +50,6 @@ const PWAInfoCard = ({ onClose }) => {
                     <div className="dismiss" onClick={onClose}>Don't care? <u>Dismiss</u></div>
                 </div>
             </div>
-        </div>
     )
 }
 

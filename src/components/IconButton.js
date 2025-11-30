@@ -1,36 +1,32 @@
-// IconButton.jsx
 import React from 'react';
 import { motion } from 'framer-motion';
 import '@/styles/button.css';
 
 const IconButton = ({ type, onClick, isOpen = false }) => {
 
-    // Define animation variants specifically for the 'plus' button
     const verticalLineVariants = {
         open: { y1: 25, y2: 75 },
         closed: { y1: 50, y2: 50 }
     };
 
-    // Dynamically determine the className based on the button type
     const colorClassMap = {
         x: 'red',
         check: 'green',
-        mail: 'blue'
+        bell: 'blue' // Renamed from 'mail'
     };
     const className = `event-add-button ${colorClassMap[type] || ''}`.trim();
 
-    // Define SVG properties that change based on type
+    // Updated conditionals to check for 'bell' instead of 'mail'
     const svgProps = {
-        viewBox: type === 'mail' ? '0 0 24 24' : '0 0 100 100',
-        strokeWidth: type === 'mail' ? '2' : '10',
-        ...(type === 'mail' && {
+        viewBox: type === 'bell' ? '0 0 24 24' : '0 0 100 100',
+        strokeWidth: type === 'bell' ? '2' : '10',
+        ...(type === 'bell' && {
             initial: { scale: 0 },
-            animate: { scale: 0.8 },
+            animate: { scale: 0.8 }, // Slight scale adjustment for the bell
             transition: { duration: 0.5, type: "spring", stiffness: 200, damping: 15 }
         })
     };
 
-    // Conditionally render the correct SVG path based on the 'type' prop
     const renderIcon = () => {
         switch (type) {
             case 'x':
@@ -64,16 +60,16 @@ const IconButton = ({ type, onClick, isOpen = false }) => {
                         <line x1="25" y1="50" x2="75" y2="50" />
                     </>
                 );
-            case 'mail':
+            case 'bell':
                 return (
                     <>
-                        <motion.rect x="2" y="4" width="20" height="16" rx="2" ry="2" />
+                        {/* Bell Body */}
                         <motion.path
-                            d="M22 6L12 13L2 6"
-                            initial={{ rotateX: 0, y: 0 }}
-                            animate={{ rotateX: isOpen ? 180 : 0, y: isOpen ? -4 : 0 }}
-                            transition={{ duration: 0.3 }}
-                            style={{ transformOrigin: "center top" }}
+                            d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"
+                        />
+                        {/* Bell Clapper */}
+                        <motion.path
+                            d="M13.73 21a2 2 0 0 1-3.46 0"
                         />
                     </>
                 );
