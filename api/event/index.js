@@ -86,11 +86,11 @@ async function postEvent(event) {
 
             await sendPushToAll(
                 {
-                    title: "new event spotted",
-                    body: event.name,
+                    title: `Free ${event.type} Spotted!`,
+                    body: `${event.name} at ${event.address}`,
                     data: {
                         eventId: event.id,
-                        url: `${BASE_URL}/events/${event.id}`
+                        url: `${BASE_URL}` // Change to auto focus selected event.
                     }
                 })
             return {success: true, message: 'Event saved successfully!', event: insertedEvent}
