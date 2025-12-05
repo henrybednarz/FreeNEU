@@ -15,6 +15,11 @@ const EventList = ({ events, focusedEvent, onCardClick, userLocation }) => {
     const sortedEvents = [...events];
 
     sortedEvents.sort((a, b) => {
+        if (focusedEvent) {
+            if (a.id === focusedEvent.id) return -1;
+            if (b.id === focusedEvent.id) return 1;
+        }
+
         const aIsClaimable = isClaimable(a, userLocation);
         const bIsClaimable = isClaimable(b, userLocation);
 

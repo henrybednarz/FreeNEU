@@ -92,7 +92,13 @@
 }
 
 .claimable {
-    background-color: var(--blue-chip-light);
+    /* background-color: var(--blue-chip-light); */
     border-color: var(--blue-chip-color);
     box-shadow: 2px 2px 8px var(--blue-chip-color);
+}
+
+.focused {
+    /* background-color: var(--red-chip-light); */
+    border-color: var(--red-chip-color);
+    box-shadow: 2px 2px 8px var(--red-chip-color);
 }

@@ -17,7 +17,7 @@ const EventCard = ({ event, onClick, isFocused, isClaimable }) => {
 
     return (
         <div
-            className={`event-card ${isFocused ? 'focused-card' : ''} ${isClaimable ? 'claimable' : ''}`}
+            className={`event-card ${isFocused ? 'focused' : ''} ${isClaimable ? 'claimable' : ''}`}
             onClick={() => onClick(event, isClaimable)}
         >
             <div className="card-header" >
